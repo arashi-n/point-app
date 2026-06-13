@@ -170,19 +170,59 @@ function renderItems() {
 
 	container.innerHTML = "";
 
-	for (const item of items) {
+	items.forEach((item, index) => {
+		const wrapper = document.createElement("div");
+
 		const button = document.createElement("button");
 		button.textContent = `${item.name} +${item.point}pt`;
+		button.onclick = () => addPoint(item.name, item.point);
 
-		button.onclick = function () {
-			addPoint(item.name, item.point);
-		};
+		const editBtn = document.createElement("button");
+		editBtn.textContent = "編集";
+		editBtn.onclick = () => editItem(index);
 
-		container.appendChild(button);
-	}
+		const delBtn = document.createElement("button");
+		delBtn.textContent = "削除";
+		delBtn.onclick = () => deleteItem(index);
+
+		wrapper.appendChild(button);
+		wrapper.appendChild(editBtn);
+		wrapper.appendChild(delBtn);
+
+		container.appendChild(wrapper);
+	});
 }
 
-init();
+function editItem(index) {
+	const newName = prompt("項目名", items[index].name);
+	const newPoint = Number(prompt("ポイント", items[index].point));
+
+	if (!newName || !newPoint) return;
+
+	items[index] = {
+		name: newName,
+		point: newPoint,
+	};
+
+	saveItems();
+	renderItems();
+}
+
+function deleteItem(index) {
+	items.splice(index, 1);
+
+	saveItems();
+	renderItems();
+}
+
+function init() {
+	loadItems();
+	renderItems();
+}
+
+function loadItems() {
+	items = JSON.parse(localStorage.getItem("items")) || [];
+}
 
 // ======================
 // ⑤ 保存
