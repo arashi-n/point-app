@@ -20,8 +20,17 @@
 		<input type="number" id="payAmount" placeholder="支給ポイント" />
 		<button onclick="payPoint()">支給</button>
 
-		<button onclick="addPoint('宿題', 10)">宿題 +10pt</button>
-		<button onclick="addPoint('お手伝い', 20)">お手伝い +20pt</button>
+		<div>
+			<input type="text" id="itemName" placeholder="項目名（例：宿題）" />
+
+			<input type="number" id="itemPoint" placeholder="ポイント（例：10）" />
+
+			<p id="errorMessage" style="color: red"></p>
+
+			<button onclick="addItemFromUI()">追加</button>
+		</div>
+		<div id="itemButtons"></div>
+
 		<button onclick="resetPoint()">ポイントリセット</button>
 
 		<h3>履歴</h3>
@@ -29,127 +38,6 @@
 		<ul id="history">
 			<li>まだ履歴はありません</li>
 		</ul>
-
-		<script>
-			// localStorage.clear();
-			let selectedChild = localStorage.getItem("selectedChild") || "yamato";
-
-			let data = JSON.parse(localStorage.getItem("data")) || {
-				yamato: { point: 0, totalPoint: 0, histories: [] },
-				ayato: { point: 0, totalPoint: 0, histories: [] },
-				arashi: { point: 0, totalPoint: 0, histories: [] },
-			};
-
-			updateUI();
-			displayHistory();
-
-			document.getElementById("childSelect").value = selectedChild;
-
-			// ポイント加算
-			function addPoint(itemName, num) {
-				const now = new Date();
-				const child = selectedChild;
-
-				data[child].point += num;
-				data[child].totalPoint += num;
-
-				data[child].histories.push({
-					date: now.toLocaleString(),
-					type: "add",
-					itemName: itemName,
-					point: num,
-				});
-
-				saveData();
-				updateUI();
-				displayHistory();
-			}
-
-			// ポイント支給（マイナス処理）
-			function payPoint() {
-				const child = selectedChild;
-				const amount = Number(document.getElementById("payAmount").value);
-
-				if (!amount || amount <= 0) {
-					alert("支給額を入力してください");
-					return;
-				}
-
-				data[child].point -= amount;
-
-				data[child].histories.unshift({
-					date: new Date().toLocaleString(),
-					type: "pay",
-					itemName: "支給",
-					point: -amount,
-				});
-
-				saveData();
-				updateUI();
-				displayHistory();
-			}
-
-			// リセット
-			function resetPoint() {
-				const child = selectedChild;
-
-				data[child].point = 0;
-
-				saveData();
-				updateUI();
-			}
-
-			// 子ども切替
-			function changeChild() {
-				selectedChild = document.getElementById("childSelect").value;
-				localStorage.setItem("selectedChild", selectedChild);
-
-				updateUI();
-				displayHistory();
-			}
-
-			// UI更新
-			function updateUI() {
-				document.getElementById("point").textContent =
-					data[selectedChild].point;
-
-				document.getElementById("totalPoint").textContent =
-					data[selectedChild].totalPoint;
-			}
-
-			//  履歴表示
-			function displayHistory() {
-				const list = data[selectedChild].histories;
-				const history = document.getElementById("history");
-
-				if (list.length === 0) {
-					history.innerHTML = "<li>まだ履歴はありません</li>";
-					return;
-				}
-
-				let html = "";
-
-				for (const item of list) {
-					const sign = item.point > 0 ? "+" : "";
-
-					html +=
-						"<li>" +
-						item.date +
-						" " +
-						item.itemName +
-						" " +
-						sign +
-						item.point +
-						"pt</li>";
-				}
-
-				history.innerHTML = html;
-			}
-
-			// 保存処理
-			function saveData() {
-				localStorage.setItem("data", JSON.stringify(data));
-			}
-		</script>
+		<script src="js/main.js"></script>
 	</body>
 </html>
