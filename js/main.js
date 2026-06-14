@@ -38,7 +38,7 @@ function addPoint(itemName, num) {
 	data[child].point += num;
 	data[child].totalPoint += num;
 
-	data[child].histories.push({
+	data[child].histories.unshift({
 		date: now.toLocaleString(),
 		type: "add",
 		itemName: itemName,
