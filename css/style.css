@@ -1,0 +1,34 @@
+body {
+	font-family: sans-serif;
+	margin: 20px;
+	line-height: 1.6;
+}
+
+input {
+	padding: 6px;
+	margin: 4px 0;
+}
+
+button {
+	padding: 6px 10px;
+	margin: 4px;
+	cursor: pointer;
+}
+
+#itemButtons div {
+	margin: 6px 0;
+	padding: 6px;
+	border: 1px solid #ddd;
+	border-radius: 6px;
+}
+
+#errorMessage {
+	color: red;
+	font-size: 12px;
+	margin-top: 4px;
+}
+
+select {
+	padding: 6px;
+	margin-bottom: 10px;
+}
