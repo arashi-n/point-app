@@ -131,40 +131,6 @@ function displayHistory() {
 	history.innerHTML = html;
 }
 
-// ボタン生成
-function addItemFromUI() {
-	const name = document.getElementById("itemName").value;
-	const point = Number(document.getElementById("itemPoint").value);
-
-	const error = document.getElementById("errorMessage");
-
-	if (!name || !point) {
-		error.textContent = "入力してください";
-		return;
-	}
-
-	error.textContent = "";
-
-	createItem(name, point);
-
-	document.getElementById("itemName").value = "";
-	document.getElementById("itemPoint").value = "";
-}
-
-function createItem(name, point) {
-	items.push({
-		name,
-		point,
-	});
-
-	saveItems();
-	renderItems();
-}
-
-function saveItems() {
-	localStorage.setItem("items", JSON.stringify(items));
-}
-
 function renderItems() {
 	const container = document.getElementById("itemButtons");
 
@@ -173,8 +139,10 @@ function renderItems() {
 	items.forEach((item, index) => {
 		const wrapper = document.createElement("div");
 
-		const button = document.createElement("button");
+		const button = document.createElement("button"); // ←これが必須
+
 		button.textContent = `${item.name} +${item.point}pt`;
+
 		button.onclick = () => addPoint(item.name, item.point);
 
 		const editBtn = document.createElement("button");
@@ -191,28 +159,6 @@ function renderItems() {
 
 		container.appendChild(wrapper);
 	});
-}
-
-function editItem(index) {
-	const newName = prompt("項目名", items[index].name);
-	const newPoint = Number(prompt("ポイント", items[index].point));
-
-	if (!newName || !newPoint) return;
-
-	items[index] = {
-		name: newName,
-		point: newPoint,
-	};
-
-	saveItems();
-	renderItems();
-}
-
-function deleteItem(index) {
-	items.splice(index, 1);
-
-	saveItems();
-	renderItems();
 }
 
 function init() {

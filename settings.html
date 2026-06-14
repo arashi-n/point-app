@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ja">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<!doctype html>
+		<html lang="ja">
+			<head>
+				<meta charset="UTF-8" />
+				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+				<title>設定画面</title>
+			</head>
+
+			<body>
+				<h1>設定画面</h1>
+
+				<a href="index.html">← メイン画面へ戻る</a>
+
+				<hr />
+
+				<h2>項目追加</h2>
+
+				<input type="text" id="itemName" placeholder="項目名（例：宿題）" />
+				<input type="number" id="itemPoint" placeholder="ポイント（例：10）" />
+
+				<button onclick="addItemFromUI()">追加</button>
+
+				<p id="errorMessage" style="color: red"></p>
+
+				<h2>項目一覧</h2>
+
+				<div id="itemButtons"></div>
+
+				<script src="js/settings.js"></script>
+			</body>
+		</html>
+	</head>
+</html>

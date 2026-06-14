@@ -7,6 +7,7 @@
 	</head>
 	<body>
 		<h1>お小遣いポイント</h1>
+		<a href="settings.html">設定画面へ</a>
 
 		<select id="childSelect" onchange="changeChild()">
 			<option value="yamato">やまと</option>
@@ -20,14 +21,6 @@
 		<input type="number" id="payAmount" placeholder="支給ポイント" />
 		<button onclick="payPoint()">支給</button>
 
-		<div>
-			<input type="text" id="itemName" placeholder="項目名（例：宿題）" />
-
-			<input type="number" id="itemPoint" placeholder="ポイント（例：10）" />
-			<button onclick="addItemFromUI()">追加</button>
-
-			<p id="errorMessage" style="color: red"></p>
-		</div>
 		<div id="itemButtons"></div>
 
 		<button onclick="resetPoint()">ポイントリセット</button>
