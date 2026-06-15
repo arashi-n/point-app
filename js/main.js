@@ -139,7 +139,7 @@ function renderItems() {
 	items.forEach((item, index) => {
 		const wrapper = document.createElement("div");
 
-		const button = document.createElement("button"); // ←これが必須
+		const button = document.createElement("button");
 
 		button.textContent = `${item.name} +${item.point}pt`;
 
