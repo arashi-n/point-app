@@ -2,6 +2,8 @@ body {
 	font-family: sans-serif;
 	margin: 20px;
 	line-height: 1.6;
+	background-color: lightcyan;
+	align-items: center;
 }
 
 input {
@@ -13,6 +15,8 @@ button {
 	padding: 6px 10px;
 	margin: 4px;
 	cursor: pointer;
+	background-color: steelblue;
+	color: aliceblue;
 }
 
 #itemButtons div {
