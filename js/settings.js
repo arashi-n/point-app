@@ -109,25 +109,25 @@ function saveItems() {
 // ======================
 // 子ども
 // ======================
-let children = JSON.parse(localStorage.getItem("children")) || [
+let users = JSON.parse(localStorage.getItem("children")) || [
 	"やまと",
 	"あやと",
 	"あらし",
 ];
 
 // 初期保存
-saveChildren();
+saveUsers();
 
 // 初期実行
-renderChildren();
+renderUsers();
 
 // UI表示
-function renderChildren() {
+function renderUsers() {
 	const container = document.getElementById("childList");
 
 	container.innerHTML = "";
 
-	children.forEach((child, index) => {
+	users.forEach((child, index) => {
 		const div = document.createElement("div");
 
 		div.textContent = child;
@@ -135,11 +135,11 @@ function renderChildren() {
 		const editBtn = document.createElement("button");
 
 		editBtn.textContent = "編集";
-		editBtn.onclick = () => editChild(index);
+		editBtn.onclick = () => editUser(index);
 
 		const delBtn = document.createElement("button");
 		delBtn.textContent = "削除";
-		delBtn.onclick = () => deleteChild(index);
+		delBtn.onclick = () => deleteUser(index);
 
 		div.appendChild(editBtn);
 		div.appendChild(delBtn);
@@ -149,7 +149,7 @@ function renderChildren() {
 }
 
 // 追加
-function addChildFromUI() {
+function addUserFromUI() {
 	const input = document.getElementById("childName");
 
 	const name = input.value.trim();
@@ -158,7 +158,7 @@ function addChildFromUI() {
 		return;
 	}
 
-	children.push(name);
+	users.push(name);
 
 	const data = JSON.parse(localStorage.getItem("data")) || {};
 
@@ -170,36 +170,36 @@ function addChildFromUI() {
 
 	localStorage.setItem("data", JSON.stringify(data));
 
-	saveChildren();
+	saveUsers();
 
-	renderChildren();
+	renderUsers();
 
 	input.value = "";
 }
 
 // 編集
-function editChild(index) {
-	const newName = prompt("新しい名前を入力してください", children[index]);
+function editUser(index) {
+	const newName = prompt("新しい名前を入力してください", users[index]);
 
 	if (!newName) {
 		return;
 	}
 
-	children[index] = newName;
+	users[index] = newName;
 
-	saveChildren();
-	renderChildren();
+	saveUsers();
+	renderUsers();
 }
 
 // 削除
-function deleteChild(index) {
-	children.splice(index, 1);
+function deleteUser(index) {
+	users.splice(index, 1);
 
-	saveChildren();
-	renderChildren();
+	saveUsers();
+	renderUsers();
 }
 
 // 保存
-function saveChildren() {
-	localStorage.setItem("children", JSON.stringify(children));
+function saveUsers() {
+	localStorage.setItem("children", JSON.stringify(users));
 }

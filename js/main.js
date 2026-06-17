@@ -115,7 +115,7 @@ function changeChild() {
 function renderChildSelect() {
 	const select = document.getElementById("childSelect");
 
-	const children = JSON.parse(localStorage.getItem("children")) || [
+	const users = JSON.parse(localStorage.getItem("children")) || [
 		"やまと",
 		"あやと",
 		"あらし",
@@ -123,7 +123,7 @@ function renderChildSelect() {
 
 	select.innerHTML = "";
 
-	children.forEach((child) => {
+	users.forEach((child) => {
 		const option = document.createElement("option");
 
 		option.value = child;
@@ -132,8 +132,8 @@ function renderChildSelect() {
 		select.appendChild(option);
 	});
 
-	if (!selectedChild || !children.includes(selectedChild)) {
-		selectedChild = children[0];
+	if (!selectedChild || !users.includes(selectedChild)) {
+		selectedChild = users[0];
 	}
 
 	select.value = selectedChild;
