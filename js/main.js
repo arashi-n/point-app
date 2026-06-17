@@ -26,9 +26,9 @@ let items = JSON.parse(localStorage.getItem("items")) || [
 init();
 
 function init() {
-	renderChildSelect();
+	renderUserSelect();
 
-	const select = document.getElementById("childSelect");
+	const select = document.getElementById("userSelect");
 
 	if (!select.value) {
 		select.value = "やまと";
@@ -48,12 +48,12 @@ function init() {
 // 加算
 function addPoint(itemName, num) {
 	const now = new Date();
-	const child = selectedUser;
+	const user = selectedUser;
 
-	data[child].point += num;
-	data[child].totalPoint += num;
+	data[user].point += num;
+	data[user].totalPoint += num;
 
-	data[child].histories.unshift({
+	data[user].histories.unshift({
 		date: now.toLocaleString(),
 		type: "add",
 		itemName: itemName,
@@ -66,7 +66,7 @@ function addPoint(itemName, num) {
 
 // 支給
 function payPoint() {
-	const child = selectedUser;
+	const user = selectedUser;
 	const amount = Number(document.getElementById("payAmount").value);
 
 	if (!amount || amount <= 0) {
@@ -74,9 +74,9 @@ function payPoint() {
 		return;
 	}
 
-	data[child].point -= amount;
+	data[user].point -= amount;
 
-	data[child].histories.unshift({
+	data[user].histories.unshift({
 		date: new Date().toLocaleString(),
 		type: "pay",
 		itemName: "支給",
@@ -89,9 +89,9 @@ function payPoint() {
 
 // リセット
 function resetPoint() {
-	const child = selectedUser;
+	const user = selectedUser;
 
-	data[child].point = 0;
+	data[user].point = 0;
 
 	saveData();
 	updateUI();
@@ -99,7 +99,7 @@ function resetPoint() {
 
 // 子ども切替
 function changeUser() {
-	selectedUser = document.getElementById("childSelect").value;
+	selectedUser = document.getElementById("userSelect").value;
 
 	if (!selectedUser) selectedUser = "やまと";
 
@@ -112,8 +112,8 @@ function changeUser() {
 // UI
 // ======================
 // 子ども選択肢表示
-function renderChildSelect() {
-	const select = document.getElementById("childSelect");
+function renderUserSelect() {
+	const select = document.getElementById("userSelect");
 
 	const users = JSON.parse(localStorage.getItem("children")) || [
 		"やまと",
@@ -123,11 +123,11 @@ function renderChildSelect() {
 
 	select.innerHTML = "";
 
-	users.forEach((child) => {
+	users.forEach((user) => {
 		const option = document.createElement("option");
 
-		option.value = child;
-		option.textContent = child;
+		option.value = user;
+		option.textContent = user;
 
 		select.appendChild(option);
 	});

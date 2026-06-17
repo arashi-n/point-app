@@ -123,14 +123,14 @@ renderUsers();
 
 // UI表示
 function renderUsers() {
-	const container = document.getElementById("childList");
+	const container = document.getElementById("userList");
 
 	container.innerHTML = "";
 
-	users.forEach((child, index) => {
+	users.forEach((user, index) => {
 		const div = document.createElement("div");
 
-		div.textContent = child;
+		div.textContent = user;
 
 		const editBtn = document.createElement("button");
 
@@ -150,7 +150,7 @@ function renderUsers() {
 
 // 追加
 function addUserFromUI() {
-	const input = document.getElementById("childName");
+	const input = document.getElementById("userName");
 
 	const name = input.value.trim();
 
