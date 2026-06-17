@@ -1,13 +1,18 @@
 // ======================
-// ① 初期データ
+// 初期データ
 // ======================
 // localStorage.clear();
-let selectedChild = localStorage.getItem("selectedChild") || "yamato";
+let selectedChild = localStorage.getItem("selectedChild");
+
+if (!selectedChild || selectedChild === "") {
+	selectedChild = "やまと";
+	localStorage.setItem("selectedChild", selectedChild);
+}
 
 let data = JSON.parse(localStorage.getItem("data")) || {
-	yamato: { point: 0, totalPoint: 0, histories: [] },
-	ayato: { point: 0, totalPoint: 0, histories: [] },
-	arashi: { point: 0, totalPoint: 0, histories: [] },
+	やまと: { point: 0, totalPoint: 0, histories: [] },
+	あやと: { point: 0, totalPoint: 0, histories: [] },
+	あらし: { point: 0, totalPoint: 0, histories: [] },
 };
 
 let items = JSON.parse(localStorage.getItem("items")) || [
@@ -16,21 +21,31 @@ let items = JSON.parse(localStorage.getItem("items")) || [
 ];
 
 // ======================
-// ② 初期化
+// 初期化
 // ======================
 init();
 
 function init() {
-	document.getElementById("childSelect").value = selectedChild;
+	renderChildSelect();
+
+	const select = document.getElementById("childSelect");
+
+	if (!select.value) {
+		select.value = "やまと";
+	}
+
+	selectedChild = select.value;
+
+	localStorage.setItem("selectedChild", selectedChild);
 
 	updateUI();
 	renderItems();
 }
 
 // ======================
-// ③ 機能系
+// 機能
 // ======================
-// ポイント加算
+// 加算
 function addPoint(itemName, num) {
 	const now = new Date();
 	const child = selectedChild;
@@ -85,15 +100,54 @@ function resetPoint() {
 // 子ども切替
 function changeChild() {
 	selectedChild = document.getElementById("childSelect").value;
+
+	if (!selectedChild) selectedChild = "やまと";
+
 	localStorage.setItem("selectedChild", selectedChild);
 
 	updateUI();
 }
 
 // ======================
-// ④ UI系（ここに集約）
+// UI
 // ======================
+// 子ども選択肢表示
+function renderChildSelect() {
+	const select = document.getElementById("childSelect");
+
+	const children = JSON.parse(localStorage.getItem("children")) || [
+		"やまと",
+		"あやと",
+		"あらし",
+	];
+
+	select.innerHTML = "";
+
+	children.forEach((child) => {
+		const option = document.createElement("option");
+
+		option.value = child;
+		option.textContent = child;
+
+		select.appendChild(option);
+	});
+
+	if (!selectedChild || !children.includes(selectedChild)) {
+		selectedChild = children[0];
+	}
+
+	select.value = selectedChild;
+}
+
+// UI更新
 function updateUI() {
+	console.log("selectedChild:", selectedChild);
+	console.log("data:", data);
+
+	if (!data[selectedChild]) {
+		console.warn("存在しない子ども:", selectedChild);
+		return;
+	}
 	document.getElementById("point").textContent = data[selectedChild].point;
 
 	document.getElementById("totalPoint").textContent =
@@ -131,52 +185,30 @@ function displayHistory() {
 	history.innerHTML = html;
 }
 
+// 項目表示
 function renderItems() {
 	const container = document.getElementById("itemButtons");
 
 	container.innerHTML = "";
 
-	items.forEach((item, index) => {
-		const wrapper = document.createElement("div");
-
+	items.forEach((item) => {
 		const button = document.createElement("button");
 
 		button.textContent = `${item.name} +${item.point}pt`;
 
 		button.onclick = () => addPoint(item.name, item.point);
 
-		const editBtn = document.createElement("button");
-		editBtn.textContent = "編集";
-		editBtn.onclick = () => editItem(index);
-
-		const delBtn = document.createElement("button");
-		delBtn.textContent = "削除";
-		delBtn.onclick = () => deleteItem(index);
-
-		wrapper.appendChild(button);
-		wrapper.appendChild(editBtn);
-		wrapper.appendChild(delBtn);
-
-		container.appendChild(wrapper);
+		container.appendChild(button);
 	});
 }
 
-function init() {
-	loadItems();
-	renderItems();
-}
-
-function loadItems() {
-	items = JSON.parse(localStorage.getItem("items")) || [];
-}
-
 // ======================
-// ⑤ 保存
+// 保存
 // ======================
 function saveData() {
 	localStorage.setItem("data", JSON.stringify(data));
 }
 
-updateUI();
-displayHistory();
-renderItems();
+// if (!localStorage.getItem("data")) {
+// 	saveData();
+// }

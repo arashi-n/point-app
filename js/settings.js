@@ -1,62 +1,25 @@
-//項目
-let items = JSON.parse(localStorage.getItem("items")) || [];
+// ======================
+// 項目
+// ======================
+// 項目データ
+let items = JSON.parse(localStorage.getItem("items")) || [
+	{ name: "宿題", point: 10 },
+	{ name: "お手伝い", point: 20 },
+];
 
+if (!localStorage.getItem("items")) {
+	localStorage.setItem("items", JSON.stringify(items));
+}
+
+// 初期実行
 init();
 
+// 初期化処理
 function init() {
 	renderItems();
 }
 
-function addItemFromUI() {
-	const name = document.getElementById("itemName").value;
-	const point = Number(document.getElementById("itemPoint").value);
-	const error = document.getElementById("errorMessage");
-
-	if (!name || !point) {
-		error.textContent = "入力してください";
-		return;
-	}
-
-	error.textContent = "";
-
-	createItem(name, point);
-
-	document.getElementById("itemName").value = "";
-	document.getElementById("itemPoint").value = "";
-}
-
-function createItem(name, point) {
-	items.push({
-		name,
-		point,
-	});
-
-	saveItems();
-	renderItems();
-}
-
-function deleteItem(index) {
-	items.splice(index, 1);
-
-	saveItems();
-	renderItems();
-}
-
-function editItem(index) {
-	const newName = prompt("項目名", items[index].name);
-	const newPoint = Number(prompt("ポイント", items[index].point));
-
-	if (!newName || !newPoint) return;
-
-	items[index] = {
-		name: newName,
-		point: newPoint,
-	};
-
-	saveItems();
-	renderItems();
-}
-
+// UI表示
 function renderItems() {
 	const container = document.getElementById("itemButtons");
 
@@ -84,20 +47,81 @@ function renderItems() {
 	});
 }
 
+// 作成
+function createItem(name, point) {
+	items.push({
+		name,
+		point,
+	});
+
+	saveItems();
+	renderItems();
+}
+
+// 追加
+function addItemFromUI() {
+	const name = document.getElementById("itemName").value;
+	const point = Number(document.getElementById("itemPoint").value);
+	const error = document.getElementById("errorMessage");
+
+	if (!name || !point) {
+		error.textContent = "入力してください";
+		return;
+	}
+
+	error.textContent = "";
+
+	createItem(name, point);
+
+	document.getElementById("itemName").value = "";
+	document.getElementById("itemPoint").value = "";
+}
+
+// 編集
+function editItem(index) {
+	const newName = prompt("項目名", items[index].name);
+	const newPoint = Number(prompt("ポイント", items[index].point));
+
+	if (!newName || !newPoint) return;
+
+	items[index] = {
+		name: newName,
+		point: newPoint,
+	};
+
+	saveItems();
+	renderItems();
+}
+
+// 削除
+function deleteItem(index) {
+	items.splice(index, 1);
+
+	saveItems();
+	renderItems();
+}
+
+// 保存
 function saveItems() {
 	localStorage.setItem("items", JSON.stringify(items));
 }
 
-//子ども
-
+// ======================
+// 子ども
+// ======================
 let children = JSON.parse(localStorage.getItem("children")) || [
 	"やまと",
 	"あやと",
 	"あらし",
 ];
 
+// 初期保存
+saveChildren();
+
+// 初期実行
 renderChildren();
 
+// UI表示
 function renderChildren() {
 	const container = document.getElementById("childList");
 
@@ -124,6 +148,7 @@ function renderChildren() {
 	});
 }
 
+// 追加
 function addChildFromUI() {
 	const input = document.getElementById("childName");
 
@@ -135,6 +160,16 @@ function addChildFromUI() {
 
 	children.push(name);
 
+	const data = JSON.parse(localStorage.getItem("data")) || {};
+
+	data[name] = {
+		point: 0,
+		totalPoint: 0,
+		histories: [],
+	};
+
+	localStorage.setItem("data", JSON.stringify(data));
+
 	saveChildren();
 
 	renderChildren();
@@ -142,6 +177,7 @@ function addChildFromUI() {
 	input.value = "";
 }
 
+// 編集
 function editChild(index) {
 	const newName = prompt("新しい名前を入力してください", children[index]);
 
@@ -155,6 +191,7 @@ function editChild(index) {
 	renderChildren();
 }
 
+// 削除
 function deleteChild(index) {
 	children.splice(index, 1);
 
@@ -162,6 +199,7 @@ function deleteChild(index) {
 	renderChildren();
 }
 
+// 保存
 function saveChildren() {
 	localStorage.setItem("children", JSON.stringify(children));
 }
