@@ -2,11 +2,11 @@
 // 初期データ
 // ======================
 // localStorage.clear();
-let selectedChild = localStorage.getItem("selectedChild");
+let selectedUser = localStorage.getItem("selectedChild");
 
-if (!selectedChild || selectedChild === "") {
-	selectedChild = "やまと";
-	localStorage.setItem("selectedChild", selectedChild);
+if (!selectedUser || selectedUser === "") {
+	selectedUser = "やまと";
+	localStorage.setItem("selectedChild", selectedUser);
 }
 
 let data = JSON.parse(localStorage.getItem("data")) || {
@@ -34,9 +34,9 @@ function init() {
 		select.value = "やまと";
 	}
 
-	selectedChild = select.value;
+	selectedUser = select.value;
 
-	localStorage.setItem("selectedChild", selectedChild);
+	localStorage.setItem("selectedChild", selectedUser);
 
 	updateUI();
 	renderItems();
@@ -48,7 +48,7 @@ function init() {
 // 加算
 function addPoint(itemName, num) {
 	const now = new Date();
-	const child = selectedChild;
+	const child = selectedUser;
 
 	data[child].point += num;
 	data[child].totalPoint += num;
@@ -66,7 +66,7 @@ function addPoint(itemName, num) {
 
 // 支給
 function payPoint() {
-	const child = selectedChild;
+	const child = selectedUser;
 	const amount = Number(document.getElementById("payAmount").value);
 
 	if (!amount || amount <= 0) {
@@ -89,7 +89,7 @@ function payPoint() {
 
 // リセット
 function resetPoint() {
-	const child = selectedChild;
+	const child = selectedUser;
 
 	data[child].point = 0;
 
@@ -98,12 +98,12 @@ function resetPoint() {
 }
 
 // 子ども切替
-function changeChild() {
-	selectedChild = document.getElementById("childSelect").value;
+function changeUser() {
+	selectedUser = document.getElementById("childSelect").value;
 
-	if (!selectedChild) selectedChild = "やまと";
+	if (!selectedUser) selectedUser = "やまと";
 
-	localStorage.setItem("selectedChild", selectedChild);
+	localStorage.setItem("selectedChild", selectedUser);
 
 	updateUI();
 }
@@ -132,33 +132,32 @@ function renderChildSelect() {
 		select.appendChild(option);
 	});
 
-	if (!selectedChild || !users.includes(selectedChild)) {
-		selectedChild = users[0];
+	if (!selectedUser || !users.includes(selectedUser)) {
+		selectedUser = users[0];
 	}
 
-	select.value = selectedChild;
+	select.value = selectedUser;
 }
 
 // UI更新
 function updateUI() {
-	console.log("selectedChild:", selectedChild);
+	console.log("selectedUser:", selectedUser);
 	console.log("data:", data);
 
-	if (!data[selectedChild]) {
-		console.warn("存在しない子ども:", selectedChild);
+	if (!data[selectedUser]) {
+		console.warn("存在しない子ども:", selectedUser);
 		return;
 	}
-	document.getElementById("point").textContent = data[selectedChild].point;
-
+	document.getElementById("point").textContent = data[selectedUser];
 	document.getElementById("totalPoint").textContent =
-		data[selectedChild].totalPoint;
+		data[selectedUser].totalPoint;
 
 	displayHistory();
 }
 
 //  履歴表示
 function displayHistory() {
-	const list = data[selectedChild].histories;
+	const list = data[selectedUser].histories;
 	const history = document.getElementById("history");
 
 	if (list.length === 0) {
