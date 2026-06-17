@@ -2,18 +2,20 @@
 // 初期データ
 // ======================
 // localStorage.clear();
-let selectedUser = localStorage.getItem("selectedChild");
+let users = JSON.parse(localStorage.getItem("users")) || [
+	"やまと",
+	"あやと",
+	"あらし",
+];
+
+let selectedUser = localStorage.getItem("selectedUser");
 
 if (!selectedUser || selectedUser === "") {
-	selectedUser = "やまと";
-	localStorage.setItem("selectedChild", selectedUser);
+	selectedUser = users[0];
+	localStorage.setItem("selectedUser", selectedUser);
 }
 
-let data = JSON.parse(localStorage.getItem("data")) || {
-	やまと: { point: 0, totalPoint: 0, histories: [] },
-	あやと: { point: 0, totalPoint: 0, histories: [] },
-	あらし: { point: 0, totalPoint: 0, histories: [] },
-};
+let data = JSON.parse(localStorage.getItem("data")) || {};
 
 let items = JSON.parse(localStorage.getItem("items")) || [
 	{ name: "宿題", point: 10 },
@@ -31,12 +33,17 @@ function init() {
 	const select = document.getElementById("userSelect");
 
 	if (!select.value) {
-		select.value = "やまと";
+		select.value = users[0] || "";
 	}
 
 	selectedUser = select.value;
 
-	localStorage.setItem("selectedChild", selectedUser);
+	localStorage.setItem("selectedUser", selectedUser);
+
+	if (!users.includes(selectedUser)) {
+		selectedUser = users[0] || "";
+		localStorage.setItem("selectedUser", selectedUser);
+	}
 
 	updateUI();
 	renderItems();
@@ -101,9 +108,11 @@ function resetPoint() {
 function changeUser() {
 	selectedUser = document.getElementById("userSelect").value;
 
-	if (!selectedUser) selectedUser = "やまと";
+	if (!users.includes(selectedUser)) {
+		selectedUser = users[0] || "";
+	}
 
-	localStorage.setItem("selectedChild", selectedUser);
+	localStorage.setItem("selectedUser", selectedUser);
 
 	updateUI();
 }
@@ -141,6 +150,15 @@ function renderUserSelect() {
 
 // UI更新
 function updateUI() {
+	if (!data[selectedUser]) {
+		data[selectedUser] = {
+			point: 0,
+			totalPoint: 0,
+			histories: [],
+		};
+		saveData();
+	}
+
 	console.log("selectedUser:", selectedUser);
 	console.log("data:", data);
 

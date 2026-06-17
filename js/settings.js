@@ -193,9 +193,20 @@ function editUser(index) {
 
 // 削除
 function deleteUser(index) {
-	users.splice(index, 1);
+	const userName = users[index];
 
+	users.splice(index, 1);
 	saveUsers();
+
+	const data = JSON.parse(localStorage.getItem("data")) || {};
+	delete data[userName];
+	localStorage.setItem("data", JSON.stringify(data));
+
+	if (localStorage.getItem("selectedUser") === userName) {
+		const newUser = users[0] || "";
+		localStorage.setItem("selectedUser", newUser);
+	}
+
 	renderUsers();
 }
 
