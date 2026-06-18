@@ -221,7 +221,9 @@ function renderItems() {
 	items.forEach((item) => {
 		const button = document.createElement("button");
 
-		button.textContent = `${item.name} +${item.point}pt`;
+		const sign = item.point > 0 ? "+" : "";
+
+		button.textContent = `${item.name} ${sign}${item.point}pt`;
 
 		button.onclick = () => addPoint(item.name, item.point);
 

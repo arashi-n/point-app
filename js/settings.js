@@ -44,8 +44,10 @@ function renderItems() {
 	items.forEach((item, index) => {
 		const wrapper = document.createElement("div");
 
+		const sign = item.point > 0 ? "+" : "";
+
 		const btn = document.createElement("button");
-		btn.textContent = `${item.name} +${item.point}pt`;
+		btn.textContent = `${item.name} ${sign}${item.point}pt`;
 
 		const editBtn = document.createElement("button");
 		editBtn.textContent = "編集";
