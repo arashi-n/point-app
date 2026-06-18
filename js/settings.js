@@ -62,6 +62,7 @@ function createItem(name, point) {
 function addItemFromUI() {
 	const name = document.getElementById("itemName").value;
 	const point = Number(document.getElementById("itemPoint").value);
+
 	const error = document.getElementById("errorMessage");
 
 	if (!name || !point) {
@@ -70,6 +71,11 @@ function addItemFromUI() {
 	}
 
 	error.textContent = "";
+
+	if (items.some((item) => item.name.toLowerCase() === name.toLowerCase())) {
+		error.textContent = "同じ項目名が既に存在します";
+		return;
+	}
 
 	createItem(name, point);
 
@@ -82,10 +88,24 @@ function editItem(index) {
 	const newName = prompt("項目名", items[index].name);
 	const newPoint = Number(prompt("ポイント", items[index].point));
 
-	if (!newName || !newPoint) return;
+	if (!newName || !newPoint) {
+		return;
+	}
+
+	const trimmedName = newName.trim();
+
+	if (
+		items.some(
+			(item, i) =>
+				i !== index && item.name.toLowerCase() === trimmedName.toLowerCase(),
+		)
+	) {
+		alert("同じ項目名が既に存在します");
+		return;
+	}
 
 	items[index] = {
-		name: newName,
+		name: trimmedName,
 		point: newPoint,
 	};
 
