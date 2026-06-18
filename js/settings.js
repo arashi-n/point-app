@@ -158,6 +158,11 @@ function addUserFromUI() {
 		return;
 	}
 
+	if (users.includes(name)) {
+		alert("同じ名前のユーザーが既に存在します");
+		return;
+	}
+
 	users.push(name);
 
 	const data = JSON.parse(localStorage.getItem("data")) || {};
@@ -181,18 +186,30 @@ function addUserFromUI() {
 function editUser(index) {
 	const oldName = users[index];
 
-	const newName = prompt("新しい名前を入力してください", users[index]);
+	const newName = prompt("新しい名前を入力してください", oldName);
 
 	if (!newName) {
 		return;
 	}
 
+	const trimmedName = newName.trim();
+
+	if (!trimmedName) {
+		alert("名前を入力してください");
+		return;
+	}
+
+	if (trimmedName !== oldName && users.includes(trimmedName)) {
+		alert("同じ名前のユーザーが既に存在します");
+		return;
+	}
+
 	const data = JSON.parse(localStorage.getItem("data")) || {};
 
-	data[newName] = data[oldName];
+	data[trimmedName] = data[oldName];
 	delete data[oldName];
 
-	users[index] = newName;
+	users[index] = trimmedName;
 
 	if (localStorage.getItem("selectedUser") === oldName) {
 		localStorage.setItem("selectedUser", newName);
