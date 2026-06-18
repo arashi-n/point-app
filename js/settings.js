@@ -61,12 +61,18 @@ function createItem(name, point) {
 // 追加
 function addItemFromUI() {
 	const name = document.getElementById("itemName").value;
-	const point = Number(document.getElementById("itemPoint").value);
+	const pointInput = document.getElementById("itemPoint").value;
+	const point = Number(pointInput);
 
 	const error = document.getElementById("errorMessage");
 
 	if (!name || !point) {
-		error.textContent = "入力してください";
+		error.textContent = "項目名を入力してください";
+		return;
+	}
+
+	if (pointInput.trim() === "" || Number.isNaN(point)) {
+		error.textContent = "ポイントは半角数字で入力してください";
 		return;
 	}
 
@@ -86,7 +92,18 @@ function addItemFromUI() {
 // 編集
 function editItem(index) {
 	const newName = prompt("項目名", items[index].name);
-	const newPoint = Number(prompt("ポイント", items[index].point));
+	const pointInput = prompt("ポイント", items[index].point);
+
+	if (pointInput === null) {
+		return;
+	}
+
+	const newPoint = Number(pointInput);
+
+	if (Number.isNaN(newPoint)) {
+		alert("ポイントは半角数字で入力してください");
+		return;
+	}
 
 	if (!newName || !newPoint) {
 		return;
