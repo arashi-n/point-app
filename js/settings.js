@@ -109,7 +109,7 @@ function saveItems() {
 // ======================
 // 子ども
 // ======================
-let users = JSON.parse(localStorage.getItem("children")) || [
+let users = JSON.parse(localStorage.getItem("users")) || [
 	"やまと",
 	"あやと",
 	"あらし",
@@ -212,5 +212,5 @@ function deleteUser(index) {
 
 // 保存
 function saveUsers() {
-	localStorage.setItem("children", JSON.stringify(users));
+	localStorage.setItem("users", JSON.stringify(users));
 }

@@ -28,25 +28,28 @@ let items = JSON.parse(localStorage.getItem("items")) || [
 init();
 
 function init() {
+	normalizeState();
 	renderUserSelect();
-
-	const select = document.getElementById("userSelect");
-
-	if (!select.value) {
-		select.value = users[0] || "";
-	}
-
-	selectedUser = select.value;
-
-	localStorage.setItem("selectedUser", selectedUser);
-
-	if (!users.includes(selectedUser)) {
-		selectedUser = users[0] || "";
-		localStorage.setItem("selectedUser", selectedUser);
-	}
-
 	updateUI();
 	renderItems();
+}
+
+function normalizeState() {
+	if (!users.includes(selectedUser)) {
+		selectedUser = users[0] || "";
+	}
+
+	if (!data[selectedUser]) {
+		data[selectedUser] = {
+			point: 0,
+			totalPoint: 0,
+			histories: [],
+		};
+	}
+
+	localStorage.setItem("selectedUser", selectedUser);
+	localStorage.setItem("users", JSON.stringify(users));
+	localStorage.setItem("data", JSON.stringify(data));
 }
 
 // ======================
@@ -124,7 +127,7 @@ function changeUser() {
 function renderUserSelect() {
 	const select = document.getElementById("userSelect");
 
-	const users = JSON.parse(localStorage.getItem("children")) || [
+	const users = JSON.parse(localStorage.getItem("users")) || [
 		"やまと",
 		"あやと",
 		"あらし",
@@ -166,7 +169,7 @@ function updateUI() {
 		console.warn("存在しない子ども:", selectedUser);
 		return;
 	}
-	document.getElementById("point").textContent = data[selectedUser];
+	document.getElementById("point").textContent = data[selectedUser].point;
 	document.getElementById("totalPoint").textContent =
 		data[selectedUser].totalPoint;
 
