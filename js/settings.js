@@ -3,14 +3,24 @@
 // ======================
 let allowNegative = JSON.parse(localStorage.getItem("allowNegative")) ?? true;
 
+let confirmDelete = JSON.parse(localStorage.getItem("confirmDelete")) ?? true;
+
 function loadSettings() {
 	document.getElementById("allowNegative").checked = allowNegative;
+
+	document.getElementById("confirmDelete").checked = confirmDelete;
 }
 
 document
 	.getElementById("allowNegative")
 	.addEventListener("change", function () {
 		localStorage.setItem("allowNegative", JSON.stringify(this.checked));
+	});
+
+document
+	.getElementById("confirmDelete")
+	.addEventListener("change", function () {
+		localStorage.setItem("confirmDelete", JSON.stringify(this.checked));
 	});
 
 // ======================
@@ -150,6 +160,15 @@ function editItem(index) {
 
 // 削除
 function deleteItem(index) {
+	const confirmDelete =
+		JSON.parse(localStorage.getItem("confirmDelete")) ?? true;
+
+	if (confirmDelete) {
+		if (!confirm("この項目を削除しますか？")) {
+			return;
+		}
+	}
+
 	items.splice(index, 1);
 
 	saveItems();
@@ -278,6 +297,15 @@ function editUser(index) {
 
 // 削除
 function deleteUser(index) {
+	const confirmDelete =
+		JSON.parse(localStorage.getItem("confirmDelete")) ?? true;
+
+	if (confirmDelete) {
+		if (!confirm("このユーザーを削除しますか？")) {
+			return;
+		}
+	}
+
 	const userName = users[index];
 
 	users.splice(index, 1);
