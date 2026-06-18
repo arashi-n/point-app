@@ -179,13 +179,26 @@ function addUserFromUI() {
 
 // 編集
 function editUser(index) {
+	const oldName = users[index];
+
 	const newName = prompt("新しい名前を入力してください", users[index]);
 
 	if (!newName) {
 		return;
 	}
 
+	const data = JSON.parse(localStorage.getItem("data")) || {};
+
+	data[newName] = data[oldName];
+	delete data[oldName];
+
 	users[index] = newName;
+
+	if (localStorage.getItem("selectedUser") === oldName) {
+		localStorage.setItem("selectedUser", newName);
+	}
+
+	localStorage.setItem("data", JSON.stringify(data));
 
 	saveUsers();
 	renderUsers();
