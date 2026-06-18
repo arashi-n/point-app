@@ -22,6 +22,8 @@ let items = JSON.parse(localStorage.getItem("items")) || [
 	{ name: "お手伝い", point: 20 },
 ];
 
+const allowNegative = JSON.parse(localStorage.getItem("allowNegative")) ?? true;
+
 // ======================
 // 初期化
 // ======================
@@ -81,6 +83,11 @@ function payPoint() {
 
 	if (!amount || amount <= 0) {
 		alert("支給額を入力してください");
+		return;
+	}
+
+	if (!allowNegative && amount > data[user].point) {
+		alert("ポイントが不足しています");
 		return;
 	}
 

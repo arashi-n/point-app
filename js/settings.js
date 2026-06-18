@@ -1,4 +1,19 @@
 // ======================
+// アプリ設定
+// ======================
+let allowNegative = JSON.parse(localStorage.getItem("allowNegative")) ?? true;
+
+function loadSettings() {
+	document.getElementById("allowNegative").checked = allowNegative;
+}
+
+document
+	.getElementById("allowNegative")
+	.addEventListener("change", function () {
+		localStorage.setItem("allowNegative", JSON.stringify(this.checked));
+	});
+
+// ======================
 // 項目
 // ======================
 // 項目データ
@@ -17,6 +32,7 @@ init();
 // 初期化処理
 function init() {
 	renderItems();
+	loadSettings();
 }
 
 // UI表示
