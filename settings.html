@@ -30,9 +30,31 @@
 		<h2>アプリ設定</h2>
 
 		<label>
-			<input type="checkbox" id="allowNegative" />
-			マイナス残高を許可する<br />
+			<input type="checkbox" id="useGoalPoint" />
+			目標ポイント機能を使用する
 		</label>
+
+		<div id="goalSettings" style="display: none">
+			<label>
+				<input type="radio" name="goalMode" value="user" checked />
+				ユーザーごと
+			</label>
+
+			<label>
+				<input type="radio" name="goalMode" value="global" />
+				全ユーザー共通
+			</label>
+
+			<br />
+
+			<input type="number" id="goalPoint" placeholder="目標ポイント" />
+		</div>
+		<br />
+
+		<label>
+			<input type="checkbox" id="allowNegative" />
+			マイナス残高を許可する </label
+		><br />
 
 		<label>
 			<input type="checkbox" id="confirmDelete" />

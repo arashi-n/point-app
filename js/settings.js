@@ -1,15 +1,40 @@
 // ======================
 // アプリ設定
 // ======================
+let useGoalPoint = JSON.parse(localStorage.getItem("useGoalPoint")) ?? false;
+
 let allowNegative = JSON.parse(localStorage.getItem("allowNegative")) ?? true;
 
 let confirmDelete = JSON.parse(localStorage.getItem("confirmDelete")) ?? true;
 
+const checkbox = document.getElementById("useGoalPoint");
+const goalSettings = document.getElementById("goalSettings");
+
+function toggleGoalSettings() {
+	if (checkbox.checked) {
+		goalSettings.style.display = "block";
+	} else {
+		goalSettings.style.display = "none";
+	}
+}
+
 function loadSettings() {
+	document.getElementById("useGoalPoint").checked = useGoalPoint;
+
 	document.getElementById("allowNegative").checked = allowNegative;
 
 	document.getElementById("confirmDelete").checked = confirmDelete;
 }
+
+loadSettings();
+
+toggleGoalSettings();
+
+checkbox.addEventListener("change", function () {
+	localStorage.setItem("useGoalPoint", JSON.stringify(this.checked));
+
+	toggleGoalSettings();
+});
 
 document
 	.getElementById("allowNegative")
