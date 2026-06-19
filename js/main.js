@@ -70,6 +70,10 @@ function normalizeState() {
 // ======================
 // 加算
 function addPoint(itemName, num) {
+	if (!selectedUser) {
+		return;
+	}
+
 	const now = new Date();
 	const user = selectedUser;
 
@@ -89,6 +93,11 @@ function addPoint(itemName, num) {
 
 // 支給
 function payPoint() {
+	if (!selectedUser) {
+		alert("ユーザーを追加してください");
+		return;
+	}
+
 	const user = selectedUser;
 	const amount = Number(document.getElementById("payAmount").value);
 
@@ -117,6 +126,11 @@ function payPoint() {
 
 // リセット
 function resetPoint() {
+	if (!selectedUser) {
+		alert("ユーザーを追加してください");
+		return;
+	}
+
 	const user = selectedUser;
 
 	data[user].point = 0;
@@ -153,6 +167,18 @@ function renderUserSelect() {
 
 	select.innerHTML = "";
 
+	if (users.length === 0) {
+		select.innerHTML = "";
+
+		const option = document.createElement("option");
+		option.textContent = "ユーザーなし";
+		option.value = "";
+
+		select.appendChild(option);
+
+		return;
+	}
+
 	users.forEach((user) => {
 		const option = document.createElement("option");
 
@@ -187,6 +213,17 @@ function updateUI() {
 		console.warn("存在しない子ども:", selectedUser);
 		return;
 	}
+
+	if (users.length === 0) {
+		document.getElementById("point").textContent = "-";
+		document.getElementById("totalPoint").textContent = "-";
+
+		document.getElementById("history").innerHTML =
+			"<li>ユーザーを追加してください</li>";
+
+		return;
+	}
+
 	document.getElementById("point").textContent = data[selectedUser].point;
 	document.getElementById("totalPoint").textContent =
 		data[selectedUser].totalPoint;
