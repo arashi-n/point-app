@@ -37,16 +37,27 @@ function init() {
 }
 
 function normalizeState() {
+	// usersに存在するユーザーのdataを保証
+	users.forEach((user) => {
+		if (!data[user]) {
+			data[user] = {
+				point: 0,
+				totalPoint: 0,
+				histories: [],
+			};
+		}
+	});
+
+	// usersに存在しないdataを削除
+	Object.keys(data).forEach((user) => {
+		if (!users.includes(user)) {
+			delete data[user];
+		}
+	});
+
+	// selectedUser補正
 	if (!users.includes(selectedUser)) {
 		selectedUser = users[0] || "";
-	}
-
-	if (!data[selectedUser]) {
-		data[selectedUser] = {
-			point: 0,
-			totalPoint: 0,
-			histories: [],
-		};
 	}
 
 	localStorage.setItem("selectedUser", selectedUser);
