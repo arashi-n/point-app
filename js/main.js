@@ -22,6 +22,12 @@ let items = JSON.parse(localStorage.getItem("items")) || [
 	{ name: "お手伝い", point: 20 },
 ];
 
+let useGoalPoint = JSON.parse(localStorage.getItem("useGoalPoint")) ?? false;
+
+let goalMode = localStorage.getItem("goalMode") || "user";
+
+let goalPoint = Number(localStorage.getItem("goalPoint")) || 0;
+
 const allowNegative = JSON.parse(localStorage.getItem("allowNegative")) ?? true;
 
 // ======================
@@ -152,6 +158,32 @@ function changeUser() {
 	updateUI();
 }
 
+function updateGoalDisplay() {
+	const goalArea = document.getElementById("goalArea");
+	const goalDisplay = document.getElementById("goalPointDisplay");
+
+	const remainDisplay = document.getElementById("remainingPoint");
+
+	if (!useGoalPoint) {
+		goalArea.style.display = "none";
+		return;
+	}
+
+	goalArea.style.display = "block";
+
+	const currentPoint = data[selectedUser].point;
+
+	goalDisplay.textContent = goalPoint;
+
+	const remain = goalPoint - currentPoint;
+
+	if (remain <= 0) {
+		remainDisplay.textContent = "達成！";
+	} else {
+		remainDisplay.textContent = remain + "pt";
+	}
+}
+
 // ======================
 // UI
 // ======================
@@ -228,6 +260,7 @@ function updateUI() {
 	document.getElementById("totalPoint").textContent =
 		data[selectedUser].totalPoint;
 
+	updateGoalDisplay();
 	displayHistory();
 }
 

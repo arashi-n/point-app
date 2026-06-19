@@ -3,6 +3,10 @@
 // ======================
 let useGoalPoint = JSON.parse(localStorage.getItem("useGoalPoint")) ?? false;
 
+let goalMode = localStorage.getItem("goalMode") || "user";
+
+let goalPoint = Number(localStorage.getItem("goalPoint")) || 0;
+
 let allowNegative = JSON.parse(localStorage.getItem("allowNegative")) ?? true;
 
 let confirmDelete = JSON.parse(localStorage.getItem("confirmDelete")) ?? true;
@@ -21,6 +25,12 @@ function toggleGoalSettings() {
 function loadSettings() {
 	document.getElementById("useGoalPoint").checked = useGoalPoint;
 
+	document.querySelector(
+		`input[name="goalMode"][value="${goalMode}"]`,
+	).checked = true;
+
+	document.getElementById("goalPoint").value = goalPoint;
+
 	document.getElementById("allowNegative").checked = allowNegative;
 
 	document.getElementById("confirmDelete").checked = confirmDelete;
@@ -34,6 +44,16 @@ checkbox.addEventListener("change", function () {
 	localStorage.setItem("useGoalPoint", JSON.stringify(this.checked));
 
 	toggleGoalSettings();
+});
+
+document.getElementById("goalPoint").addEventListener("input", function () {
+	localStorage.setItem("goalPoint", this.value);
+});
+
+document.querySelectorAll('input[name="goalMode"]').forEach((radio) => {
+	radio.addEventListener("change", function () {
+		localStorage.setItem("goalMode", this.value);
+	});
 });
 
 document
