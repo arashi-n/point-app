@@ -1,5 +1,9 @@
-const state = {
-  users: JSON.parse(localStorage.getItem("users")) || [],
-  data: JSON.parse(localStorage.getItem("data")) || {},
-  items: JSON.parse(localStorage.getItem("items")) || [],
+const storage = {
+  save(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
+  },
+
+  load(key, fallback) {
+    return JSON.parse(localStorage.getItem(key)) ?? fallback;
+  },
 };

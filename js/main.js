@@ -2,6 +2,19 @@
 // 初期データ
 // ======================
 // localStorage.clear();
+const state = {
+  users: JSON.parse(localStorage.getItem("users")) || [
+    "やまと",
+    "あやと",
+    "あらし",
+  ],
+  data: JSON.parse(localStorage.getItem("data")) || {},
+  items: JSON.parse(localStorage.getItem("items")) || [
+    { name: "宿題", point: 10 },
+    { name: "お手伝い", point: 20 },
+  ],
+};
+
 let selectedUser = localStorage.getItem("selectedUser");
 
 if (!selectedUser || selectedUser === "") {
@@ -202,6 +215,8 @@ function updateUI() {
     console.warn("selectedUser異常:", selectedUser);
     return;
   }
+
+  if (!data[selectedUser]) return;
 
   const goalEl = document.getElementById("goalPointDisplay");
   const remainEl = document.getElementById("remainingPoint");

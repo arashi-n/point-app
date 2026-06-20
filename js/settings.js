@@ -1,6 +1,19 @@
 // ======================
 // アプリ設定
 // ======================
+const state = {
+  users: JSON.parse(localStorage.getItem("users")) || [
+    "やまと",
+    "あやと",
+    "あらし",
+  ],
+  data: JSON.parse(localStorage.getItem("data")) || {},
+  items: JSON.parse(localStorage.getItem("items")) || [
+    { name: "宿題", point: 10 },
+    { name: "お手伝い", point: 20 },
+  ],
+};
+
 let useGoalPoint = JSON.parse(localStorage.getItem("useGoalPoint")) ?? false;
 
 let data = JSON.parse(localStorage.getItem("data")) || {};
@@ -300,7 +313,9 @@ function renderUsers() {
 function addUserFromUI() {
   const input = document.getElementById("userName");
 
-  const name = input.value.trim();
+  if (!input) return;
+
+  const name = input?.value?.trim();
 
   if (!name) {
     return;
