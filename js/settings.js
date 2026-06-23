@@ -3,9 +3,9 @@
 // ======================
 const state = {
 	users: JSON.parse(localStorage.getItem("users")) || [
-		"やまと",
-		"あやと",
-		"あらし",
+		"Aさん",
+		"Bさん",
+		"Cさん",
 	],
 	data: JSON.parse(localStorage.getItem("data")) || {},
 	items: JSON.parse(localStorage.getItem("items")) || [
