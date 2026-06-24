@@ -133,14 +133,17 @@ document
 		localStorage.setItem("confirmDelete", JSON.stringify(this.checked));
 	});
 
-document.getElementById("clearAllBtn").addEventListener("click", () => {
-	const ok = confirm("すべてのデータを初期化します。よろしいですか？");
-	if (!ok) return;
+document.addEventListener("DOMContentLoaded", () => {
+	const btn = document.getElementById("clearAllBtn");
+	if (!btn) return;
 
-	localStorage.clear();
+	btn.addEventListener("click", () => {
+		const ok = confirm("すべて初期化しますか？");
+		if (!ok) return;
 
-	alert("初期化しました。ページを再読み込みします。");
-	location.reload();
+		localStorage.clear();
+		location.reload();
+	});
 });
 
 // ======================
@@ -307,6 +310,10 @@ saveUsers();
 renderUsers();
 
 // UI表示
+function notifyUpdate() {
+	window.dispatchEvent(new Event("appUpdate"));
+}
+
 function renderUsers() {
 	const container = document.getElementById("userList");
 
@@ -399,6 +406,8 @@ function addUserFromUI() {
 
 	console.log(state.users);
 	console.log(localStorage.getItem("users"));
+
+	notifyUpdate();
 }
 
 // 編集
@@ -438,6 +447,7 @@ function editUser(index) {
 
 	saveUsers();
 	renderUsers();
+	notifyUpdate();
 }
 
 // 削除
@@ -466,9 +476,15 @@ function deleteUser(index) {
 	}
 
 	renderUsers();
+	notifyUpdate();
 }
 
 // 保存
 function saveUsers() {
 	localStorage.setItem("users", JSON.stringify(state.users));
 }
+
+window.addEventListener("appUpdate", () => {
+	renderUsers();
+	renderPersonalGoals();
+});

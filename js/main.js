@@ -433,3 +433,8 @@ function renderMainItems() {
 function saveData() {
 	localStorage.setItem("data", JSON.stringify(state.data));
 }
+
+window.addEventListener("appUpdate", () => {
+	renderUserSelect();
+	updateUI();
+});
