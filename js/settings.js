@@ -133,6 +133,16 @@ document
 		localStorage.setItem("confirmDelete", JSON.stringify(this.checked));
 	});
 
+document.getElementById("clearAllBtn").addEventListener("click", () => {
+	const ok = confirm("すべてのデータを初期化します。よろしいですか？");
+	if (!ok) return;
+
+	localStorage.clear();
+
+	alert("初期化しました。ページを再読み込みします。");
+	location.reload();
+});
+
 // ======================
 // 項目
 // ======================
@@ -351,14 +361,10 @@ function renderUsers() {
 // 追加
 function addUserFromUI() {
 	const input = document.getElementById("userName");
-
 	if (!input) return;
 
-	const name = input?.value?.trim();
-
-	if (!name) {
-		return;
-	}
+	const name = input.value.trim();
+	if (!name) return;
 
 	if (state.users.includes(name)) {
 		alert("同じ名前のユーザーが既に存在します");
@@ -376,7 +382,11 @@ function addUserFromUI() {
 		histories: [],
 	};
 
-	localStorage.setItem("data", JSON.stringify(state.data));
+	state.data = data;
+
+	localStorage.setItem("users", JSON.stringify(state.users));
+	localStorage.setItem("data", JSON.stringify(data));
+	localStorage.setItem("selectedUser", name);
 
 	saveUsers();
 
@@ -384,12 +394,8 @@ function addUserFromUI() {
 	renderPersonalGoals();
 
 	selectedUser = name;
-	localStorage.setItem("selectedUser", name);
 
 	input.value = "";
-
-	selectedUser = name;
-	localStorage.setItem("selectedUser", name);
 
 	console.log(state.users);
 	console.log(localStorage.getItem("users"));
