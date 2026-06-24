@@ -16,8 +16,6 @@ const state = {
 
 let useGoalPoint = JSON.parse(localStorage.getItem("useGoalPoint")) ?? false;
 
-let data = JSON.parse(localStorage.getItem("data")) || {};
-
 let goalMode = localStorage.getItem("goalMode") || "personal";
 
 let allowNegative = JSON.parse(localStorage.getItem("allowNegative")) ?? true;
@@ -37,6 +35,8 @@ const goalRadios = document.querySelectorAll('input[name="goalMode"]');
 
 function initSettings() {
 	loadSettings();
+	renderUsers();
+	renderSettingsItems();
 	toggleGoalSettings();
 	renderPersonalGoals();
 	renderSharedGoal();
@@ -82,11 +82,11 @@ function renderPersonalGoals() {
 
 		const input = document.createElement("input");
 		input.type = "number";
-		input.value = data[user]?.goalPoint || 0;
+		input.value = state.data[user]?.goalPoint || 0;
 
 		input.addEventListener("input", () => {
-			data[user].goalPoint = Number(input.value) || 0;
-			localStorage.setItem("data", JSON.stringify(data));
+			state.data[user].goalPoint = Number(input.value) || 0;
+			localStorage.setItem("data", JSON.stringify(state.data));
 		});
 
 		row.appendChild(label);
@@ -137,33 +137,30 @@ document
 // 項目
 // ======================
 // 項目データ
-if (!localStorage.getItem("items")) {
-	localStorage.setItem("items", JSON.stringify(items));
-}
-
-// 初期化処理
-function init() {
-	renderItems();
-	renderUsers();
+if (!localStorage.getItem("state.items")) {
+	localStorage.setItem("state.items", JSON.stringify(state.items));
 }
 
 // 初期実行
-init();
 initSettings();
 
 // UI表示
-function renderItems() {
+function renderSettingsItems() {
 	const container = document.getElementById("itemButtons");
-
 	container.innerHTML = "";
 
-	items.forEach((item, index) => {
+	state.items.forEach((item, index) => {
 		const wrapper = document.createElement("div");
+		wrapper.className = "itemRow";
+
+		const label = document.createElement("div");
+		label.className = "itemLabel";
 
 		const sign = item.point > 0 ? "+" : "";
+		label.textContent = `${item.name} ${sign}${item.point}pt`;
 
-		const btn = document.createElement("button");
-		btn.textContent = `${item.name} ${sign}${item.point}pt`;
+		const actions = document.createElement("div");
+		actions.className = "itemActions";
 
 		const editBtn = document.createElement("button");
 		editBtn.textContent = "編集";
@@ -173,9 +170,11 @@ function renderItems() {
 		delBtn.textContent = "削除";
 		delBtn.onclick = () => deleteItem(index);
 
-		wrapper.appendChild(btn);
-		wrapper.appendChild(editBtn);
-		wrapper.appendChild(delBtn);
+		actions.appendChild(editBtn);
+		actions.appendChild(delBtn);
+
+		wrapper.appendChild(label);
+		wrapper.appendChild(actions);
 
 		container.appendChild(wrapper);
 	});
@@ -183,13 +182,13 @@ function renderItems() {
 
 // 作成
 function createItem(name, point) {
-	items.push({
+	state.items.push({
 		name,
 		point,
 	});
 
 	saveItems();
-	renderItems();
+	renderSettingsItems();
 }
 
 // 追加
@@ -212,7 +211,9 @@ function addItemFromUI() {
 
 	error.textContent = "";
 
-	if (items.some((item) => item.name.toLowerCase() === name.toLowerCase())) {
+	if (
+		state.items.some((item) => item.name.toLowerCase() === name.toLowerCase())
+	) {
 		error.textContent = "同じ項目名が既に存在します";
 		return;
 	}
@@ -225,8 +226,8 @@ function addItemFromUI() {
 
 // 編集
 function editItem(index) {
-	const newName = prompt("項目名", items[index].name);
-	const pointInput = prompt("ポイント", items[index].point);
+	const newName = prompt("項目名", state.items[index].name);
+	const pointInput = prompt("ポイント", state.items[index].point);
 
 	if (pointInput === null) {
 		return;
@@ -246,7 +247,7 @@ function editItem(index) {
 	const trimmedName = newName.trim();
 
 	if (
-		items.some(
+		state.items.some(
 			(item, i) =>
 				i !== index && item.name.toLowerCase() === trimmedName.toLowerCase(),
 		)
@@ -255,13 +256,13 @@ function editItem(index) {
 		return;
 	}
 
-	items[index] = {
+	state.items[index] = {
 		name: trimmedName,
 		point: newPoint,
 	};
 
 	saveItems();
-	renderItems();
+	renderSettingsItems();
 }
 
 // 削除
@@ -275,15 +276,15 @@ function deleteItem(index) {
 		}
 	}
 
-	items.splice(index, 1);
+	state.items.splice(index, 1);
 
 	saveItems();
-	renderItems();
+	renderSettingsItems();
 }
 
 // 保存
 function saveItems() {
-	localStorage.setItem("items", JSON.stringify(items));
+	localStorage.setItem("state.items", JSON.stringify(state.items));
 }
 
 // ======================
@@ -299,15 +300,37 @@ renderUsers();
 function renderUsers() {
 	const container = document.getElementById("userList");
 
+	const empty = document.getElementById("userEmpty");
+	if (!empty) return;
+
 	container.innerHTML = "";
 
-	state.users.forEach((user, index) => {
-		const div = document.createElement("div");
+	if (state.users.length === 0) {
+		container.style.display = "none";
+		empty.innerHTML = `
+			<div class="emptyState">
+				ユーザーがいません<br>
+				追加してください
+			</div>
+		`;
+		return;
+	}
 
-		div.textContent = user;
+	container.style.display = "block";
+	empty.innerHTML = "";
+
+	state.users.forEach((user, index) => {
+		const wrapper = document.createElement("div");
+		wrapper.className = "userRow";
+
+		const name = document.createElement("div");
+		name.className = "userName";
+		name.textContent = user;
+
+		const actions = document.createElement("div");
+		actions.className = "userActions";
 
 		const editBtn = document.createElement("button");
-
 		editBtn.textContent = "編集";
 		editBtn.onclick = () => editUser(index);
 
@@ -315,10 +338,13 @@ function renderUsers() {
 		delBtn.textContent = "削除";
 		delBtn.onclick = () => deleteUser(index);
 
-		div.appendChild(editBtn);
-		div.appendChild(delBtn);
+		actions.appendChild(editBtn);
+		actions.appendChild(delBtn);
 
-		container.appendChild(div);
+		wrapper.appendChild(name);
+		wrapper.appendChild(actions);
+
+		container.appendChild(wrapper);
 	});
 }
 
@@ -350,13 +376,20 @@ function addUserFromUI() {
 		histories: [],
 	};
 
-	localStorage.setItem("data", JSON.stringify(data));
+	localStorage.setItem("data", JSON.stringify(state.data));
 
 	saveUsers();
 
 	renderUsers();
+	renderPersonalGoals();
+
+	selectedUser = name;
+	localStorage.setItem("selectedUser", name);
 
 	input.value = "";
+
+	selectedUser = name;
+	localStorage.setItem("selectedUser", name);
 
 	console.log(state.users);
 	console.log(localStorage.getItem("users"));
@@ -395,7 +428,7 @@ function editUser(index) {
 		localStorage.setItem("selectedUser", newName);
 	}
 
-	localStorage.setItem("data", JSON.stringify(data));
+	localStorage.setItem("data", JSON.stringify(state.data));
 
 	saveUsers();
 	renderUsers();
@@ -419,7 +452,7 @@ function deleteUser(index) {
 
 	const data = JSON.parse(localStorage.getItem("data")) || {};
 	delete data[userName];
-	localStorage.setItem("data", JSON.stringify(data));
+	localStorage.setItem("data", JSON.stringify(state.data));
 
 	if (localStorage.getItem("selectedUser") === userName) {
 		const newUser = state.users[0] || "";

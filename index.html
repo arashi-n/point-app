@@ -5,9 +5,11 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>ポイント管理</title>
 		<link rel="stylesheet" href="css/style.css" />
+		<link rel="stylesheet" href="css/main.css" />
 	</head>
 	<body>
 		<h1>ポイント</h1>
+		<div id="statusMessage"></div>
 		<a href="settings.html">設定画面へ</a>
 
 		<select id="userSelect" onchange="changeUser()"></select>
@@ -26,7 +28,7 @@
 			<button onclick="payPoint()">支給</button>
 		</div>
 
-		<div id="itemButtons"></div>
+		<div id="itemButtons" class="mainItemButtons"></div>
 
 		<button id="resetButton" onclick="resetPoint()">ポイントリセット</button>
 
@@ -57,7 +59,6 @@
 
 		<p id="historyToggleBtn" onclick="toggleHistory()">▼ もっと見る</p>
 
-		<script src="js/storage.js"></script>
 		<script src="js/main.js"></script>
 	</body>
 </html>

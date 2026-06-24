@@ -1,0 +1,171 @@
+input:not([type="checkbox"]):not([type="radio"]),
+select {
+	width: 320px;
+}
+
+.itemRow {
+	width: 320px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px 12px;
+	background: white;
+	border-radius: 10px;
+	margin-bottom: 8px;
+	box-sizing: border-box;
+}
+
+.itemLabel {
+	flex: 1;
+	font-weight: bold;
+	font-size: 14px;
+}
+
+.itemActions {
+	display: flex;
+	gap: 6px;
+	flex-shrink: 0;
+}
+
+.itemActions button {
+	padding: 6px 10px;
+	font-size: 12px;
+	border-radius: 6px;
+}
+
+input[type="radio"] {
+	width: auto;
+	margin: 0;
+}
+
+.settingCard {
+	width: 320px;
+	background: white;
+	border-radius: 10px;
+	margin-bottom: 8px;
+	padding: 12px;
+
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	box-sizing: border-box;
+	transition: 0.2s;
+}
+
+.settingCard:hover {
+	transform: translateY(-1px);
+	transition: 0.2s;
+}
+
+.settingLeft {
+	flex: 1;
+}
+
+.settingRight {
+	flex-shrink: 0;
+}
+
+.settingCardBlock {
+	width: 320px;
+	display: flex;
+	flex-direction: column;
+}
+
+.settingCard label {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	width: auto;
+	white-space: nowrap;
+}
+
+.settingCard input[type="radio"] {
+	margin: 0;
+}
+
+#goalSettings {
+	width: 320px;
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+}
+
+.settingRow {
+	width: 320px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	margin-bottom: 8px;
+	box-sizing: border-box;
+}
+
+.settingName {
+	width: 60px;
+	font-size: 14px;
+	text-align: left;
+	flex: 1;
+}
+
+.settingRow input {
+	flex: 1;
+	max-width: 180px;
+	padding: 8px;
+}
+
+#personalGoalSettings div {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 320px;
+	box-sizing: border-box;
+	margin-bottom: 8px;
+	gap: 8px;
+}
+
+#personalGoalSettings input {
+	width: 180px;
+	padding: 6px;
+	text-align: right;
+}
+
+#sharedGoalSettings input {
+	text-align: right;
+}
+
+.userRow {
+	width: 320px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px 12px;
+	background: white;
+	border-radius: 10px;
+	margin-bottom: 8px;
+	box-sizing: border-box;
+}
+
+.userName {
+	flex: 1;
+	text-align: left;
+	font-weight: bold;
+	font-size: 14px;
+}
+
+.userActions {
+	display: flex;
+	gap: 6px;
+	flex-shrink: 0;
+}
+
+.userActions button {
+	padding: 6px 10px;
+	font-size: 12px;
+	border-radius: 6px;
+}
+
+#errorMessage {
+	color: red;
+	font-size: 12px;
+	margin-top: 4px;
+}

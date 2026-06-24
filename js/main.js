@@ -24,13 +24,6 @@ if (!selectedUser || selectedUser === "") {
 
 let showAllHistory = false;
 
-let data = JSON.parse(localStorage.getItem("data")) || {};
-
-let items = JSON.parse(localStorage.getItem("items")) || [
-	{ name: "宿題", point: 10 },
-	{ name: "お手伝い", point: 20 },
-];
-
 let useGoalPoint = JSON.parse(localStorage.getItem("useGoalPoint")) ?? false;
 
 let goalMode = localStorage.getItem("goalMode") || "personal";
@@ -48,9 +41,9 @@ function init() {
 	normalizeState();
 	renderUserSelect();
 	updateUI();
-	renderItems();
-	displayHistory();
 }
+
+init();
 
 function normalizeState() {
 	if (!state.users.includes(selectedUser)) {
@@ -58,8 +51,8 @@ function normalizeState() {
 	}
 
 	state.users.forEach((user) => {
-		if (!data[user]) {
-			data[user] = {
+		if (!state.data[user]) {
+			state.data[user] = {
 				point: 0,
 				totalPoint: 0,
 				goalPoint: 0,
@@ -67,20 +60,20 @@ function normalizeState() {
 			};
 		}
 
-		if (data[user].goalPoint === undefined) {
-			data[user].goalPoint = 0;
+		if (state.data[user].goalPoint === undefined) {
+			state.data[user].goalPoint = 0;
 		}
 	});
 
-	Object.keys(data).forEach((user) => {
+	Object.keys(state.data).forEach((user) => {
 		if (!state.users.includes(user)) {
-			delete data[user];
+			delete state.data[user];
 		}
 	});
 
 	localStorage.setItem("selectedUser", selectedUser);
 	localStorage.setItem("state.users", JSON.stringify(state.users));
-	localStorage.setItem("data", JSON.stringify(data));
+	localStorage.setItem("data", JSON.stringify(state.data));
 }
 
 // ======================
@@ -96,10 +89,10 @@ function addPoint(itemName, num) {
 	const now = new Date();
 	const user = selectedUser;
 
-	data[user].point += num;
-	data[user].totalPoint += num;
+	state.data[user].point += num;
+	state.data[user].totalPoint += num;
 
-	data[user].histories.unshift({
+	state.data[user].histories.unshift({
 		date: now.toLocaleString(),
 		type: "add",
 		itemName: itemName,
@@ -108,7 +101,6 @@ function addPoint(itemName, num) {
 
 	saveData();
 	updateUI();
-	displayHistory();
 }
 
 // 支給
@@ -126,14 +118,14 @@ function payPoint() {
 		return;
 	}
 
-	if (!allowNegative && amount > data[user].point) {
+	if (!allowNegative && amount > state.data[user].point) {
 		alert("ポイントが不足しています");
 		return;
 	}
 
-	data[user].point -= amount;
+	state.data[user].point -= amount;
 
-	data[user].histories.unshift({
+	state.data[user].histories.unshift({
 		date: new Date().toLocaleString(),
 		type: "pay",
 		itemName: "支給",
@@ -153,13 +145,13 @@ function resetPoint() {
 
 	const user = selectedUser;
 
-	data[user].point = 0;
+	state.data[user].point = 0;
 
 	saveData();
 	updateUI();
 }
 
-// 子ども切替
+// ユーザー切替
 function changeUser() {
 	selectedUser = document.getElementById("userSelect").value;
 
@@ -177,7 +169,7 @@ function changeUser() {
 // ======================
 // UI
 // ======================
-// 子ども選択肢表示
+// ユーザー選択肢表示
 function renderUserSelect() {
 	const select = document.getElementById("userSelect");
 
@@ -225,20 +217,20 @@ function updateModeUI() {
 }
 
 function updateCommonUI() {
-	if (!selectedUser || !data[selectedUser]) return;
+	if (!selectedUser || !state.data[selectedUser]) return;
 
 	const pointEl = document.getElementById("point");
 	const totalEl = document.getElementById("totalPoint");
 
-	if (pointEl) pointEl.textContent = data[selectedUser].point;
-	if (totalEl) totalEl.textContent = data[selectedUser].totalPoint;
+	if (pointEl) pointEl.textContent = state.data[selectedUser].point;
+	if (totalEl) totalEl.textContent = state.data[selectedUser].totalPoint;
 }
 
 function updatePersonalUI() {
-	if (!selectedUser || !data[selectedUser]) return;
+	if (!selectedUser || !state.data[selectedUser]) return;
 
-	const goal = data[selectedUser]?.goalPoint || 0;
-	const current = data[selectedUser]?.point || 0;
+	const goal = state.data[selectedUser]?.goalPoint || 0;
+	const current = state.data[selectedUser]?.point || 0;
 
 	const remain = goal - current;
 
@@ -267,8 +259,7 @@ function updateGoalVisibilityUI() {
 	const personalArea = document.getElementById("goalAreaPersonal");
 	const sharedArea = document.getElementById("goalAreaShared");
 
-	const useGoalPoint =
-		JSON.parse(localStorage.getItem("useGoalPoint")) ?? false;
+	const useGoalPoint = state.useGoalPoint ?? false;
 
 	if (!useGoalPoint) {
 		personalArea.style.display = "none";
@@ -282,7 +273,7 @@ function updateGoalVisibilityUI() {
 function updateSharedUI() {
 	const sharedGoal = Number(localStorage.getItem("sharedGoalPoint")) || 0;
 
-	const total = Object.values(data).reduce((sum, user) => {
+	const total = Object.values(state.data).reduce((sum, user) => {
 		return sum + (user.point || 0);
 	}, 0);
 
@@ -320,13 +311,12 @@ function updateSharedUI() {
 }
 
 function updateUI() {
-	if (!selectedUser || !data[selectedUser]) {
-		console.warn("updateUI skipped: invalid state", {
-			selectedUser,
-			hasData: !!data[selectedUser],
-		});
+	if (!selectedUser || !state.data?.[selectedUser]) {
+		showEmptyState();
 		return;
 	}
+
+	hideEmptyState();
 
 	updateModeUI();
 	updateCommonUI();
@@ -334,11 +324,15 @@ function updateUI() {
 	updateGoalVisibilityUI();
 	updateSharedUI();
 	displayHistory();
+	renderMainItems();
 }
 
 //  履歴表示
 function displayHistory() {
-	const list = data[selectedUser].histories;
+	const userData = state.data?.[selectedUser];
+	if (!userData) return;
+
+	const list = userData.histories ?? [];
 	const history = document.getElementById("history");
 
 	if (list.length === 0) {
@@ -346,9 +340,9 @@ function displayHistory() {
 		return;
 	}
 
-	let html = "";
-
 	const displayList = showAllHistory ? list : list.slice(0, 5);
+
+	let html = "";
 
 	for (const item of displayList) {
 		const sign = item.point > 0 ? "+" : "";
@@ -377,17 +371,34 @@ function displayHistory() {
 }
 
 function toggleHistory() {
+	if (!selectedUser || !state.data[selectedUser]) return;
+
 	showAllHistory = !showAllHistory;
 	displayHistory();
 }
 
+function showEmptyState() {
+	const el = document.getElementById("statusMessage");
+	if (!el) return;
+
+	el.style.display = "block";
+	el.textContent = "ユーザーがいません";
+}
+
+function hideEmptyState() {
+	const el = document.getElementById("statusMessage");
+	if (!el) return;
+
+	el.style.display = "none";
+}
+
 // 項目表示
-function renderItems() {
+function renderMainItems() {
 	const container = document.getElementById("itemButtons");
 
 	container.innerHTML = "";
 
-	items.forEach((item) => {
+	state.items.forEach((item) => {
 		const button = document.createElement("button");
 
 		const sign = item.point > 0 ? "+" : "";
@@ -401,16 +412,12 @@ function renderItems() {
 
 		container.appendChild(button);
 	});
-	console.log("renderItems実行");
+	console.log("renderMainItems実行");
 }
 
 // ======================
 // 保存
 // ======================
 function saveData() {
-	localStorage.setItem("data", JSON.stringify(data));
+	localStorage.setItem("data", JSON.stringify(state.data));
 }
-
-// if (!localStorage.getItem("data")) {
-// 	saveData();
-// }
