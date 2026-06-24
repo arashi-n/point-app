@@ -3,6 +3,8 @@ body {
 	margin: 20px;
 	line-height: 1.6;
 	background-color: lightcyan;
+	display: flex;
+	flex-direction: column;
 	align-items: center;
 }
 
@@ -11,19 +13,86 @@ input {
 	margin: 4px 0;
 }
 
-button {
-	padding: 6px 10px;
-	margin: 4px;
-	cursor: pointer;
-	background-color: steelblue;
-	color: aliceblue;
+a {
+	display: inline-block;
+	margin-bottom: 20px;
 }
 
-#itemButtons div {
-	margin: 6px 0;
-	padding: 6px;
-	border: 1px solid #ddd;
-	border-radius: 6px;
+button {
+	padding: 8px 14px;
+	margin: 4px;
+	cursor: pointer;
+
+	background-color: steelblue;
+	color: white;
+
+	border: none;
+	border-radius: 8px;
+
+	transition:
+		background-color 0.2s,
+		transform 0.1s;
+}
+
+button:hover {
+	background-color: #346f9a;
+}
+
+button:active {
+	transform: scale(0.97);
+}
+
+#itemButtons button {
+	min-height: 70px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	margin: 0;
+	padding: 8px;
+	border: none;
+	border-radius: 10px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+#itemButtons {
+	width: 320px;
+
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 10px;
+}
+
+.itemName {
+	font-size: 13px;
+	font-weight: bold;
+	word-break: break-word;
+}
+
+.itemPoint {
+	font-size: 11px;
+	margin-top: 4px;
+	opacity: 0.8;
+}
+
+#resetButton {
+	width: 320px;
+	margin: 32px 0 32px 0;
+
+	background-color: white;
+	color: #d9534f;
+
+	border: 2px solid #d9534f;
+	border-radius: 10px;
+}
+
+#resetButton:hover {
+	background-color: #f8d7da;
+}
+
+#resetButton:active {
+	background-color: #d9534f;
+	color: white;
 }
 
 #errorMessage {
@@ -35,4 +104,180 @@ button {
 select {
 	padding: 6px;
 	margin-bottom: 10px;
+}
+
+#goalAreaPersonal,
+#goalAreaShared {
+	padding: 12px;
+	margin: 12px 0;
+	border: 2px solid steelblue;
+	border-radius: 10px;
+	background-color: white;
+	width: 320px;
+	box-sizing: border-box;
+	text-align: center;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+#goalAreaPersonal p,
+#goalAreaShared p {
+	margin: 8px 0;
+}
+
+#goalPointDisplay,
+#sharedGoalPoint,
+#remainingPointPersonal,
+#remainingPointShared,
+#sharedTotalPoint {
+	font-size: 28px;
+	font-weight: bold;
+	color: slategray;
+}
+
+.progressBar {
+	width: 100%;
+	height: 12px;
+	background-color: #e5e5e5;
+	border-radius: 999px;
+	overflow: hidden;
+	margin: 16px 0;
+}
+
+.progressFill {
+	width: 0%;
+	height: 100%;
+	background-color: steelblue;
+	border-radius: 999px;
+	transition: width 0.3s;
+}
+
+#goalPercent {
+	margin: 8px 0;
+	font-size: 14px;
+	color: #666;
+}
+
+#userSelect {
+	width: 320px;
+	box-sizing: border-box;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 8px;
+	background-color: white;
+	margin-bottom: 12px;
+	text-align: center;
+	text-align-last: center;
+}
+
+#pointCards {
+	display: flex;
+	gap: 12px;
+	margin: 20px 0;
+}
+
+.pointCard {
+	width: 154px;
+	padding: 12px;
+
+	background-color: white;
+	border: 2px solid steelblue;
+	border-radius: 10px;
+
+	text-align: center;
+	box-sizing: border-box;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.pointCard p {
+	margin: 0 0 8px 0;
+	font-size: 14px;
+}
+
+.pointCard span {
+	font-size: 36px;
+	color: steelblue;
+	font-weight: bold;
+}
+
+#payArea {
+	width: 320px;
+	display: flex;
+	margin-bottom: 20px;
+}
+
+#payAmount {
+	flex: 1;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-right: none;
+	border-radius: 8px 0 0 8px;
+	box-sizing: border-box;
+	margin: 0;
+}
+
+#payArea button {
+	width: 70px;
+	margin: 0;
+	border-radius: 0 8px 8px 0;
+}
+
+h3 {
+	margin-bottom: 12px;
+}
+
+#history {
+	width: 320px;
+	padding: 0 16px;
+	list-style: none;
+
+	background: white;
+	border-radius: 12px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+	box-sizing: border-box;
+}
+
+#history li {
+	display: flex;
+	align-items: center;
+	padding: 14px 0;
+}
+
+#history li:not(:last-child) {
+	border-bottom: 1px solid #eee;
+}
+
+.historyDate {
+	width: 135px;
+	font-size: 12px;
+	color: #666;
+}
+
+.historyName {
+	flex: 1;
+	text-align: center;
+}
+
+.historyPoint {
+	width: 70px;
+	text-align: right;
+	font-weight: bold;
+}
+
+#historyToggleBtn {
+	margin-top: 12px;
+	font-size: 14px;
+	color: steelblue;
+	cursor: pointer;
+}
+
+#historyToggleBtn:hover {
+	text-decoration: underline;
+}
+
+input,
+select {
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 8px;
+	box-sizing: border-box;
 }

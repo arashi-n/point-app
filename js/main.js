@@ -22,6 +22,8 @@ if (!selectedUser || selectedUser === "") {
 	localStorage.setItem("selectedUser", selectedUser);
 }
 
+let showAllHistory = false;
+
 let data = JSON.parse(localStorage.getItem("data")) || {};
 
 let items = JSON.parse(localStorage.getItem("items")) || [
@@ -167,6 +169,8 @@ function changeUser() {
 
 	localStorage.setItem("selectedUser", selectedUser);
 
+	showAllHistory = false;
+
 	updateUI();
 }
 
@@ -241,17 +245,38 @@ function updatePersonalUI() {
 	document.getElementById("goalPointDisplay").textContent = goal;
 	document.getElementById("remainingPointPersonal").textContent =
 		remain <= 0 ? "達成！" : `${remain}pt`;
+
+	const progress = goal > 0 ? Math.min((current / goal) * 100, 100) : 0;
+
+	const progressBar = document.getElementById("goalProgress");
+
+	if (progressBar) {
+		progressBar.style.width = progress + "%";
+		document.getElementById("goalPercent").textContent =
+			Math.floor(progress) + "%";
+	}
+
+	if (progress >= 100) {
+		progressBar.style.backgroundColor = "#ffb300";
+	} else {
+		progressBar.style.backgroundColor = "steelblue";
+	}
 }
 
 function updateGoalVisibilityUI() {
-	const goalArea = document.getElementById("goalArea");
+	const personalArea = document.getElementById("goalAreaPersonal");
+	const sharedArea = document.getElementById("goalAreaShared");
 
 	const useGoalPoint =
 		JSON.parse(localStorage.getItem("useGoalPoint")) ?? false;
 
-	if (!goalArea) return;
+	if (!useGoalPoint) {
+		personalArea.style.display = "none";
+		sharedArea.style.display = "none";
+		return;
+	}
 
-	goalArea.style.display = useGoalPoint ? "block" : "none";
+	updateModeUI();
 }
 
 function updateSharedUI() {
@@ -263,14 +288,34 @@ function updateSharedUI() {
 
 	const remain = sharedGoal - total;
 
+	const progress =
+		sharedGoal > 0 ? Math.min((total / sharedGoal) * 100, 100) : 0;
+
+	const progressBar = document.getElementById("sharedGoalProgress");
+
 	const goalEl = document.getElementById("sharedGoalPoint");
 	const totalEl = document.getElementById("sharedTotalPoint");
 	const remainEl = document.getElementById("remainingPointShared");
+	const percentEl = document.getElementById("sharedGoalPercent");
 
 	if (goalEl) goalEl.textContent = sharedGoal;
 	if (totalEl) totalEl.textContent = total;
 	if (remainEl) {
 		remainEl.textContent = remain <= 0 ? "達成！" : `${remain}pt`;
+	}
+
+	if (progressBar) {
+		progressBar.style.width = progress + "%";
+
+		if (progress >= 100) {
+			progressBar.style.backgroundColor = "#ffb300";
+		} else {
+			progressBar.style.backgroundColor = "steelblue";
+		}
+	}
+
+	if (percentEl) {
+		percentEl.textContent = Math.floor(progress) + "%";
 	}
 }
 
@@ -303,21 +348,37 @@ function displayHistory() {
 
 	let html = "";
 
-	for (const item of list) {
+	const displayList = showAllHistory ? list : list.slice(0, 5);
+
+	for (const item of displayList) {
 		const sign = item.point > 0 ? "+" : "";
 
-		html +=
-			"<li>" +
-			item.date +
-			" " +
-			item.itemName +
-			" " +
-			sign +
-			item.point +
-			"pt</li>";
+		html += `
+	<li>
+		<span class="historyDate">${item.date}</span>
+		<span class="historyName">${item.itemName}</span>
+		<span class="historyPoint">${sign}${item.point}pt</span>
+	</li>
+`;
 	}
 
 	history.innerHTML = html;
+
+	const btn = document.getElementById("historyToggleBtn");
+
+	if (btn) {
+		if (list.length <= 5) {
+			btn.style.display = "none";
+		} else {
+			btn.style.display = "block";
+			btn.textContent = showAllHistory ? "▲ 閉じる" : "▼ もっと見る";
+		}
+	}
+}
+
+function toggleHistory() {
+	showAllHistory = !showAllHistory;
+	displayHistory();
 }
 
 // 項目表示
@@ -331,7 +392,10 @@ function renderItems() {
 
 		const sign = item.point > 0 ? "+" : "";
 
-		button.textContent = `${item.name} ${sign}${item.point}pt`;
+		button.innerHTML = `
+	<span class="itemName">${item.name}</span>
+	<span class="itemPoint">${sign}${item.point}pt</span>
+`;
 
 		button.onclick = () => addPoint(item.name, item.point);
 

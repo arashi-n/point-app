@@ -12,32 +12,51 @@
 
 		<select id="userSelect" onchange="changeUser()"></select>
 
+		<div id="pointCards">
+			<div class="pointCard">
+				<p>現在ポイント<span id="point">0</span>pt</p>
+			</div>
+			<div class="pointCard">
+				<p>累計ポイント<span id="totalPoint">0</span>pt</p>
+			</div>
+		</div>
+
+		<div id="payArea">
+			<input type="number" id="payAmount" placeholder="支給ポイント" />
+			<button onclick="payPoint()">支給</button>
+		</div>
+
+		<div id="itemButtons"></div>
+
+		<button id="resetButton" onclick="resetPoint()">ポイントリセット</button>
+
 		<div id="goalAreaPersonal">
 			<p>目標ポイント：<span id="goalPointDisplay">-</span>pt</p>
+			<div class="progressBar">
+				<div id="goalProgress" class="progressFill"></div>
+			</div>
+			<p id="goalPercent">0%</p>
 			<p>目標まで残り：<span id="remainingPointPersonal"></span></p>
 		</div>
 
 		<div id="goalAreaShared">
 			<p>共有目標：<span id="sharedGoalPoint">-</span>pt</p>
 			<p>合計ポイント：<span id="sharedTotalPoint">-</span>pt</p>
+			<div class="progressBar">
+				<div id="sharedGoalProgress" class="progressFill"></div>
+			</div>
+			<p id="sharedGoalPercent">0%</p>
 			<p>残り：<span id="remainingPointShared"></span></p>
 		</div>
-
-		<p>現在ポイント：<span id="point">0</span>pt</p>
-		<p>累計ポイント：<span id="totalPoint">0</span>pt</p>
-
-		<input type="number" id="payAmount" placeholder="支給ポイント" />
-		<button onclick="payPoint()">支給</button>
-
-		<div id="itemButtons"></div>
-
-		<button onclick="resetPoint()">ポイントリセット</button>
 
 		<h3>履歴</h3>
 
 		<ul id="history">
 			<li>まだ履歴はありません</li>
 		</ul>
+
+		<p id="historyToggleBtn" onclick="toggleHistory()">▼ もっと見る</p>
+
 		<script src="js/storage.js"></script>
 		<script src="js/main.js"></script>
 	</body>
