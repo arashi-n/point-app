@@ -9,8 +9,8 @@ const state = {
 	],
 	data: JSON.parse(localStorage.getItem("data")) || {},
 	items: JSON.parse(localStorage.getItem("items")) || [
-		{ name: "宿題", point: 10 },
-		{ name: "お手伝い", point: 20 },
+		{ name: "項目A", point: 10 },
+		{ name: "項目B", point: 20 },
 	],
 };
 
@@ -23,8 +23,8 @@ let allowNegative = JSON.parse(localStorage.getItem("allowNegative")) ?? true;
 let confirmDelete = JSON.parse(localStorage.getItem("confirmDelete")) ?? true;
 
 let items = JSON.parse(localStorage.getItem("items")) || [
-	{ name: "宿題", point: 10 },
-	{ name: "お手伝い", point: 20 },
+	{ name: "項目A", point: 10 },
+	{ name: "項目B", point: 20 },
 ];
 
 const checkbox = document.getElementById("useGoalPoint");
