@@ -406,6 +406,8 @@ function hideEmptyState() {
 
 // 項目表示
 function renderMainItems() {
+	console.log(state.items);
+
 	const container = document.getElementById("itemButtons");
 
 	container.innerHTML = "";
@@ -435,6 +437,7 @@ function saveData() {
 }
 
 window.addEventListener("appUpdate", () => {
+	renderMainItems();
 	renderUserSelect();
 	updateUI();
 });

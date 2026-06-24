@@ -202,6 +202,7 @@ function createItem(name, point) {
 
 	saveItems();
 	renderSettingsItems();
+	notifyUpdate();
 }
 
 // 追加
@@ -235,6 +236,8 @@ function addItemFromUI() {
 
 	document.getElementById("itemName").value = "";
 	document.getElementById("itemPoint").value = "";
+
+	notifyUpdate();
 }
 
 // 編集
@@ -276,6 +279,7 @@ function editItem(index) {
 
 	saveItems();
 	renderSettingsItems();
+	notifyUpdate();
 }
 
 // 削除
@@ -293,11 +297,12 @@ function deleteItem(index) {
 
 	saveItems();
 	renderSettingsItems();
+	notifyUpdate();
 }
 
 // 保存
 function saveItems() {
-	localStorage.setItem("state.items", JSON.stringify(state.items));
+	localStorage.setItem("items", JSON.stringify(state.items));
 }
 
 // ======================
