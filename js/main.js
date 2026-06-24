@@ -206,14 +206,17 @@ function renderUserSelect() {
 }
 
 // UI更新
-function updateModeUI() {
+function updateGoalModeUI() {
 	const mode = localStorage.getItem("goalMode") || "personal";
 
-	document.getElementById("goalAreaPersonal").style.display =
-		mode === "personal" ? "block" : "none";
+	const personalArea = document.getElementById("goalAreaPersonal");
+	const sharedArea = document.getElementById("goalAreaShared");
 
-	document.getElementById("goalAreaShared").style.display =
-		mode === "shared" ? "block" : "none";
+	if (!personalArea || !sharedArea) return;
+
+	personalArea.style.display = mode === "personal" ? "block" : "none";
+
+	sharedArea.style.display = mode === "shared" ? "block" : "none";
 }
 
 function updateCommonUI() {
@@ -259,7 +262,10 @@ function updateGoalVisibilityUI() {
 	const personalArea = document.getElementById("goalAreaPersonal");
 	const sharedArea = document.getElementById("goalAreaShared");
 
-	const useGoalPoint = state.useGoalPoint ?? false;
+	if (!personalArea || !sharedArea) return;
+
+	const useGoalPoint =
+		JSON.parse(localStorage.getItem("useGoalPoint")) ?? false;
 
 	if (!useGoalPoint) {
 		personalArea.style.display = "none";
@@ -267,7 +273,10 @@ function updateGoalVisibilityUI() {
 		return;
 	}
 
-	updateModeUI();
+	personalArea.style.display = "block";
+	sharedArea.style.display = "block";
+
+	updateGoalModeUI();
 }
 
 function updateSharedUI() {
@@ -311,6 +320,9 @@ function updateSharedUI() {
 }
 
 function updateUI() {
+	console.log("useGoalPoint:", localStorage.getItem("useGoalPoint"));
+	console.log("goalAreaPersonal:", document.getElementById("goalAreaPersonal"));
+
 	if (!selectedUser || !state.data?.[selectedUser]) {
 		showEmptyState();
 		return;
@@ -318,7 +330,7 @@ function updateUI() {
 
 	hideEmptyState();
 
-	updateModeUI();
+	updateGoalModeUI();
 	updateCommonUI();
 	updatePersonalUI();
 	updateGoalVisibilityUI();
