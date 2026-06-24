@@ -31,7 +31,7 @@ let items = JSON.parse(localStorage.getItem("items")) || [
 
 let useGoalPoint = JSON.parse(localStorage.getItem("useGoalPoint")) ?? false;
 
-let goalMode = localStorage.getItem("goalMode") || "user";
+let goalMode = localStorage.getItem("goalMode") || "personal";
 
 let goalPoint = Number(localStorage.getItem("goalPoint")) || 0;
 
@@ -210,46 +210,85 @@ function renderUserSelect() {
 }
 
 // UI更新
-function updateUI() {
-	if (!selectedUser || !data[selectedUser]) {
-		console.warn("selectedUser異常:", selectedUser);
-		return;
-	}
+function updateModeUI() {
+	const mode = localStorage.getItem("goalMode") || "personal";
 
-	if (!data[selectedUser]) return;
+	document.getElementById("goalAreaPersonal").style.display =
+		mode === "personal" ? "block" : "none";
 
-	const goalEl = document.getElementById("goalPointDisplay");
-	const remainEl = document.getElementById("remainingPoint");
-	const goalArea = document.getElementById("goalArea");
+	document.getElementById("goalAreaShared").style.display =
+		mode === "shared" ? "block" : "none";
+}
+
+function updateCommonUI() {
+	if (!selectedUser || !data[selectedUser]) return;
+
+	const pointEl = document.getElementById("point");
+	const totalEl = document.getElementById("totalPoint");
+
+	if (pointEl) pointEl.textContent = data[selectedUser].point;
+	if (totalEl) totalEl.textContent = data[selectedUser].totalPoint;
+}
+
+function updatePersonalUI() {
+	if (!selectedUser || !data[selectedUser]) return;
 
 	const goal = data[selectedUser]?.goalPoint || 0;
 	const current = data[selectedUser]?.point || 0;
-	const pointEl = document.getElementById("point");
-	if (pointEl) {
-		pointEl.textContent = data[selectedUser].point;
-	}
-	const totalEl = document.getElementById("totalPoint");
-	if (totalEl) {
-		totalEl.textContent = data[selectedUser].totalPoint;
-	}
 
-	if (!goalEl || !remainEl || !goalArea) return;
+	const remain = goal - current;
+
+	document.getElementById("goalPointDisplay").textContent = goal;
+	document.getElementById("remainingPointPersonal").textContent =
+		remain <= 0 ? "達成！" : `${remain}pt`;
+}
+
+function updateGoalVisibilityUI() {
+	const goalArea = document.getElementById("goalArea");
 
 	const useGoalPoint =
 		JSON.parse(localStorage.getItem("useGoalPoint")) ?? false;
 
-	if (!useGoalPoint) {
-		goalArea.style.display = "none";
+	if (!goalArea) return;
+
+	goalArea.style.display = useGoalPoint ? "block" : "none";
+}
+
+function updateSharedUI() {
+	const sharedGoal = Number(localStorage.getItem("sharedGoalPoint")) || 0;
+
+	const total = Object.values(data).reduce((sum, user) => {
+		return sum + (user.point || 0);
+	}, 0);
+
+	const remain = sharedGoal - total;
+
+	const goalEl = document.getElementById("sharedGoalPoint");
+	const totalEl = document.getElementById("sharedTotalPoint");
+	const remainEl = document.getElementById("remainingPointShared");
+
+	if (goalEl) goalEl.textContent = sharedGoal;
+	if (totalEl) totalEl.textContent = total;
+	if (remainEl) {
+		remainEl.textContent = remain <= 0 ? "達成！" : `${remain}pt`;
+	}
+}
+
+function updateUI() {
+	if (!selectedUser || !data[selectedUser]) {
+		console.warn("updateUI skipped: invalid state", {
+			selectedUser,
+			hasData: !!data[selectedUser],
+		});
 		return;
 	}
 
-	goalArea.style.display = "block";
-
-	goalEl.textContent = goal;
-
-	const remain = goal - current;
-
-	remainEl.textContent = remain <= 0 ? "達成！" : `${remain}pt`;
+	updateModeUI();
+	updateCommonUI();
+	updatePersonalUI();
+	updateGoalVisibilityUI();
+	updateSharedUI();
+	displayHistory();
 }
 
 //  履歴表示

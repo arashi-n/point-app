@@ -1,39 +1,44 @@
 <!doctype html>
 <html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ポイント管理</title>
-    <link rel="stylesheet" href="css/style.css" />
-  </head>
-  <body>
-    <h1>ポイント</h1>
-    <a href="settings.html">設定画面へ</a>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>ポイント管理</title>
+		<link rel="stylesheet" href="css/style.css" />
+	</head>
+	<body>
+		<h1>ポイント</h1>
+		<a href="settings.html">設定画面へ</a>
 
-    <select id="userSelect" onchange="changeUser()"></select>
+		<select id="userSelect" onchange="changeUser()"></select>
 
-    <div id="goalArea">
-      <p>目標ポイント：<span id="goalPointDisplay">-</span>pt</p>
+		<div id="goalAreaPersonal">
+			<p>目標ポイント：<span id="goalPointDisplay">-</span>pt</p>
+			<p>目標まで残り：<span id="remainingPointPersonal"></span></p>
+		</div>
 
-      <p>目標まで残り：<span id="remainingPoint"></span></p>
-    </div>
+		<div id="goalAreaShared">
+			<p>共有目標：<span id="sharedGoalPoint">-</span>pt</p>
+			<p>合計ポイント：<span id="sharedTotalPoint">-</span>pt</p>
+			<p>残り：<span id="remainingPointShared"></span></p>
+		</div>
 
-    <p>現在ポイント：<span id="point">0</span>pt</p>
-    <p>累計ポイント：<span id="totalPoint">0</span>pt</p>
+		<p>現在ポイント：<span id="point">0</span>pt</p>
+		<p>累計ポイント：<span id="totalPoint">0</span>pt</p>
 
-    <input type="number" id="payAmount" placeholder="支給ポイント" />
-    <button onclick="payPoint()">支給</button>
+		<input type="number" id="payAmount" placeholder="支給ポイント" />
+		<button onclick="payPoint()">支給</button>
 
-    <div id="itemButtons"></div>
+		<div id="itemButtons"></div>
 
-    <button onclick="resetPoint()">ポイントリセット</button>
+		<button onclick="resetPoint()">ポイントリセット</button>
 
-    <h3>履歴</h3>
+		<h3>履歴</h3>
 
-    <ul id="history">
-      <li>まだ履歴はありません</li>
-    </ul>
-    <script src="js/storage.js"></script>
-    <script src="js/main.js"></script>
-  </body>
+		<ul id="history">
+			<li>まだ履歴はありません</li>
+		</ul>
+		<script src="js/storage.js"></script>
+		<script src="js/main.js"></script>
+	</body>
 </html>

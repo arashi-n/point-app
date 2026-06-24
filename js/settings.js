@@ -39,6 +39,7 @@ function initSettings() {
 	loadSettings();
 	toggleGoalSettings();
 	renderPersonalGoals();
+	renderSharedGoal();
 	updateGoalModeUI();
 }
 
@@ -94,7 +95,15 @@ function renderPersonalGoals() {
 	});
 }
 
-initSettings();
+function renderSharedGoal() {
+	const input = document.getElementById("sharedGoalPoint");
+
+	input.value = localStorage.getItem("sharedGoalPoint") || 0;
+
+	input.addEventListener("input", () => {
+		localStorage.setItem("sharedGoalPoint", input.value);
+	});
+}
 
 checkbox.addEventListener("change", function () {
 	localStorage.setItem("useGoalPoint", JSON.stringify(this.checked));
@@ -132,14 +141,15 @@ if (!localStorage.getItem("items")) {
 	localStorage.setItem("items", JSON.stringify(items));
 }
 
-// 初期実行
-init();
-
 // 初期化処理
 function init() {
 	renderItems();
-	loadSettings();
+	renderUsers();
 }
+
+// 初期実行
+init();
+initSettings();
 
 // UI表示
 function renderItems() {
